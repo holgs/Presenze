@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "database.php";
+//include "database.php";
 ?>
 
 <!DOCTYPE html>
@@ -9,16 +9,16 @@ include "database.php";
 	<head>
 		<title>Login</title>
 		<link rel="stylesheet" href="css/bootstrap.css" />
-        <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/style.css" />
 	<!-- Custom styles for this template -->
 		<link href="css/signin.css" rel="stylesheet">
 		<script src="js/jquery.js"></script>
-        <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrap.js"></script>
 	</head>
 
 	<body>
 		<div class="container">
-			<form action="login.php" method="post" class="form-signin">
+			<form action="elogin.php" method="post" class="form-signin">
 						<h2 class="form-signin-heading">Effettua il Login qui</h2>
 						<label for="user_email" class="sr-only">Email</label>
 						<input type="text" name="user_email" class="form-control" placeholder="Inserisci la tua email" required autofocus/>
@@ -41,29 +41,5 @@ include "database.php";
 				</h5>
 			</center>
 		</div>
-		<?php
-
-		if(isset($_POST['login']))
-		{
-			$user_email = mysqli_real_escape_string($con,$_POST['user_email']);
-			$user_pass = mysqli_real_escape_string($con,$_POST['user_pass']);
-
-			$sel = "select * from register_user where user_email='$user_email' AND user_pass='$user_pass'";
-			$run = mysqli_query($con,$sel);
-			
-			$check = mysqli_num_rows($run);
-			
-			if($check == 0)
-			{
-				echo "<script>alert('e-Mail o password non valide!Prova ancora!')</script>";
-				exit();
-			} else
-			{
-				$_SESSION['user_email'] = $user_email;
-				echo "<script>alert('Login effettuato con successo!')</script>";
-				echo "<script>window.open('index_home.php','_self')</script>";
-			}
-		}
-		?>	
 	</body>
 </html>
