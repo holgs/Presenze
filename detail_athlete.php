@@ -1,12 +1,13 @@
 <?php
-session_start();
-include "database.php";
+include "function_setup.php";
 // VERIFICARE CHE LA SESSIONE SIA ANCORA APERTA
 if(!isset($_SESSION['user_email']))
 {
     header("location: login.php");
 } else if(isset($_GET['id']))
 	{
+		$con = connessione($messaggi_errore);
+		
 		$edit_id = $_GET['id'];
 		$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id WHERE athl_id='$edit_id'";
 		
@@ -29,6 +30,7 @@ if(!isset($_SESSION['user_email']))
 		$data_belt = date_create($row['athl_ryu_data']);
 				
 	}
+	
 ?>
 <!DOCTYPE html>
 
@@ -124,20 +126,7 @@ if(!isset($_SESSION['user_email']))
 							<h4 class="modal-title" id="myModalLabel">Elenco Presenze</h4>
 						</div>
 						<div class="modal-body">
-							<?php
-								$presence = "SELECT * FROM athl_presence WHERE athl_pres_athl_id = $edit_id ORDER BY athl_pres_date";
-								$run = mysqli_query($con,$presence);
-								
-								while($row = mysqli_fetch_array($run)){
-									$pres_date = $row['athl_pres_date'];
-									if($row['athl_pres_presence']==1){
-										$pres = "Presente";
-									} else {
-										$pres = "Assente";
-									}
-									echo $pres_date.": ".$pres."<br>";
-								}
-							?>
+							<?php	valuta_presenza($con,$edit_id); ?>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>

@@ -1,10 +1,11 @@
 <?php
-session_start();
-include "database.php";
+include "function_setup.php";
+// VERIFICARE CHE LA SESSIONE SIA ANCORA APERTA
 if(!isset($_SESSION['user_email']))
-	{
-		header("location: login.php");
-	}
+{
+    header("location: login.php");
+}
+$con = connessione($messaggi_errore);
 ?>
 <!DOCTYPE html>
 
@@ -109,61 +110,10 @@ if(!isset($_SESSION['user_email']))
 
 		if(isset($_POST['register']))
 		{
-		
-			$athl_name = mysqli_real_escape_string($con,$_POST['athl_name']);
-			$athl_surname = mysqli_real_escape_string($con,$_POST['athl_surname']);
-			$athl_address = mysqli_real_escape_string($con,$_POST['athl_address']);
-			$athl_city = mysqli_real_escape_string($con,$_POST['athl_city']);
-			$athl_zip = mysqli_real_escape_string($con,$_POST['athl_zip']);
-			$athl_pr = mysqli_real_escape_string($con,$_POST['athl_pr']);
-			$athl_b_day = mysqli_real_escape_string($con,$_POST['athl_b_day']);
-			$athl_no = mysqli_real_escape_string($con,$_POST['athl_no']);
-			$athl_email = mysqli_real_escape_string($con,$_POST['athl_email']);
-			$athl_gender = mysqli_real_escape_string($con,$_POST['athl_gender']);
-			$athl_ryu_belt = mysqli_real_escape_string($con,$_POST['athl_ryu_belt']);
-
-			$athl_image = $_FILES['athl_image']['name'];
-			$athl_tmp = $_FILES['athl_image']['tmp_name'];
-
-			if($athl_address =='' OR $athl_image =='' OR $athl_gender='')
-			{
-				echo "<script>alert('Compila tutti i campi!')</script>";
-				exit();
-			}
-		
-			if(!filter_var($athl_email,FILTER_VALIDATE_EMAIL))
-			{
-				echo "<script>alert('La tua email non è valida!')</script>";
-				exit();
-			}
-			//$_SESSION['user_email'] = $user_email;
-			
-			move_uploaded_file($athl_tmp,"images/$athl_image");
-			
-			// QUERY INSERIMENTO ATLETA
-			$insert = "INSERT INTO athletes 
-			(athl_name,athl_surname,athl_email,athl_address,athl_zip,athl_city,athl_pr,athl_gender,athl_b_day,athl_no,athl_image,athl_register_date) 
-			VALUES ('$athl_name','$athl_surname','$athl_email','$athl_address','$athl_zip','$athl_city','$athl_pr','$athl_gender','$athl_b_day','$athl_no','$athl_image',NOW())";
-			$run_insert = mysqli_query($con,$insert);
-			
-			// QUERY DI OTTENIMENTO ATHL_ID APPENA INSERITO
-			$get_athl_id = "SELECT athl_id FROM athletes ORDER BY athl_id DESC LIMIT 1";
-			$athl_result = mysqli_query($con,$get_athl_id);
-			$athl_row = mysqli_fetch_row($athl_result);
-			$athl_id = $athl_row[0];
-			//echo "<script>alert('Athl_id caricato $athl_id')</script>";
-			
-			// QUERY DI INSERIMENTO CINTURA
-			$insert_belt = "INSERT INTO athletes_ryu (athl_ryu_athl_id,athl_ryu_belt,athl_ryu_data) VALUES ('$athl_id','$athl_ryu_belt',NOW())";
-			$run_insert_belt = mysqli_query($con,$insert_belt);
-			
-			// VERIFICA CORRETTO INSERIMENTO ATLETA e CINTURA
-			if($run_insert && $run_insert_belt)
-				{
-					echo "<script>alert('Atleta inserito con successo!')</script>";
-					echo "<script>window.open('index_home.php','_self')</script>";
-				}
+		inserisci_atleta($con);
 		}
+		mysqli_close($con);
+		
 		?>
 	</body>
 </html>

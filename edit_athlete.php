@@ -1,12 +1,13 @@
 <?php
-session_start();
-include "database.php";
+include "function_setup.php";
 // VERIFICARE CHE LA SESSIONE SIA ANCORA APERTA
 if(!isset($_SESSION['user_email']))
 {
     header("location: login.php");
 } else if(isset($_GET['id']))
 	{
+		$con = connessione($messaggi_errore); 
+		
 		$edit_id = $_GET['id'];
 		$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id WHERE athl_id='$edit_id'";
 		//DATE_FORMAT(athl_b_day, '%d/%m/%Y')as athl_b_day 
@@ -159,81 +160,14 @@ if(!isset($_SESSION['user_email']))
 
 		if(isset($_POST['update']))
 		{
-		
-			$athl_name = mysqli_real_escape_string($con,$_POST['athl_name']);
-			$athl_surname = mysqli_real_escape_string($con,$_POST['athl_surname']);
-			$athl_b_day =mysqli_real_escape_string($con,$_POST['athl_b_day']);
-			echo $athl_b_day;
-			$athl_email = mysqli_real_escape_string($con,$_POST['athl_email']);
-			$athl_no = mysqli_real_escape_string($con,$_POST['athl_no']);
-			$athl_address = mysqli_real_escape_string($con,$_POST['athl_address']);
-			$athl_city = mysqli_real_escape_string($con,$_POST['athl_city']);
-			$athl_zip = mysqli_real_escape_string($con,$_POST['athl_zip']);
-			$athl_pr = mysqli_real_escape_string($con,$_POST['athl_pr']);
-			$athl_ryu_belt = mysqli_real_escape_string($con,$_POST['athl_ryu_belt']);
-			$athl_ryu_data = mysqli_real_escape_string($con,$_POST['athl_ryu_data']);
-
-			
-
-			//if($user_address =='' OR $user_image =='')
-			//{
-			//	echo "<script>alert('Please fill all the fields!')</script>";
-			//	exit();
-			//}
-		
-			if(!filter_var($athl_email,FILTER_VALIDATE_EMAIL))
-			{
-				echo "<script>alert('L'indirizzo email non è valido!')</script>";
-				exit();
-			}
-			//$_SESSION['user_email'] = $user_email;
-			//$query = "INSERT INTO table VALUES('" . STR_TO_DATE($data_input, '%d/%m/%Y' )."')";
-			$fmt ="'%d/%m/%Y'";
-			$update = "UPDATE athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id
-							SET athl_name='$athl_name',
-							athl_surname='$athl_surname',
-							athl_b_day=STR_TO_DATE('$athl_b_day',$fmt),
-							athl_email='$athl_email',
-							athl_no='$athl_no',
-							athl_address='$athl_address',
-							athl_city='$athl_city',
-							athl_zip='$athl_zip',
-							athl_pr='$athl_pr',
-							athl_ryu_belt='$athl_ryu_belt',
-							athl_ryu_data=STR_TO_DATE('$athl_ryu_data',$fmt)
-							WHERE athl_id='$edit_id'";
-			
-
-			$run_update = mysqli_query($con,$update);
-			
-				if($run_update)
-				{
-					echo "<script>alert('Aggiornamento completato con successo')</script>";
-					echo "<script>window.open('view_athletes.php','_self')</script>";
-
-				} else {
-					echo "<script>alert('Aggiornamento non effettuato')</script>";
-				}
+		aggiorna_atleta($con,$id);
 		}
 		
-		if(isset($_POST['update_image'])){
-			$athl_image = $_FILES['athl_image']['name'];
-			$athl_tmp = $_FILES['athl_image']['tmp_name'];
-			
-			move_uploaded_file($athl_tmp,"images/$athl_image");
-			
-			$update_image ="UPDATE athletes SET athl_image='$athl_image' WHERE athl_id='$edit_id'";
-			
-			$run_update_image = mysqli_query($con,$update_image);
-			if($run_update_image)
-			{
-				echo"<script>alert('Aggiornamento immagine completato con successo')</script>";
-				echo "<script>window.open('view_athletes.php','_self')</script>";
-
-			} else {
-					echo "<script>alert('Aggiornamento non effettuato')</script>";
-			}
+		if(isset($_POST['update_image']))
+		{
+			aggiorna_immagine($con,$id);
 		}
+		mysqli_close($con);
 		?>
 	</body>
 </html>

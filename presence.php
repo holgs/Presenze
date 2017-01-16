@@ -1,10 +1,11 @@
 <?php
-session_start();
-include "database.php";
+include "function_setup.php";
+// VERIFICARE CHE LA SESSIONE SIA ANCORA APERTA
 if(!isset($_SESSION['user_email']))
-	{
-		header("location: login.php");
-	} 
+{
+    header("location: login.php");
+}
+$con = connessione($messaggi_errore);
 ?>
 
 <html>
@@ -92,25 +93,14 @@ if(!isset($_SESSION['user_email']))
         <div class="clearfix"></div>
 
     </body>
-	
-		<?php
+<?php
 		//INSERISCI PRESENZA
 		if(isset($_GET['id']) && isset($_GET['presence']))
 		{
-			$get_id = $_GET['id'];
-			$get_presence = $_GET['presence'];
-			//$athl_pres_presence = $_GET['ryu_id'];
-			
-			$presence = "INSERT INTO athl_presence (athl_pres_athl_id,athl_pres_date,athl_pres_presence) VALUES ('$get_id',NOW(),'$get_presence')";
-			$run_presence = mysqli_query($con,$presence);
-						
-			if($run_presence)
-			{
-				//echo "<script>alert('Presenza inserita con successo')</script>";
-				echo "<script>window.open('presence.php','_self')</script>";
-				
-			}
+			athlete_presence($con,$_GET['id'],$_GET['presence']);
+			echo "<script>window.open('presence.php','_self')</script>";
 		}
 		?>
+			
 
 </html>
