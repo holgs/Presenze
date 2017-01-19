@@ -10,6 +10,8 @@ session_start();
 		<title>Login</title>
 		<link rel="stylesheet" href="css/bootstrap.css" />
     <link rel="stylesheet" href="css/style.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<!-- Custom styles for this template -->
 		<link href="css/signin.css" rel="stylesheet">
 		<script src="js/jquery.js"></script>
@@ -34,7 +36,7 @@ session_start();
 			
 			<center>
 				<h5>
-				Non ancora registrato? <a href="registration.php">Registrati qui.</a>
+				<!-- Non ancora registrato? <a href="registration.php">Registrati qui.</a> -->
 				</h5>
 				<h5>
 				Amministratore? <a href="admin_login.php">Accedi qui.</a>

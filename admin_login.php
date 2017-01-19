@@ -1,7 +1,9 @@
 <?php
-session_start();
-include "database.php";
+include "function_setup.php";
+//echo $_SERVER['DOCUMENT_ROOT']."Presenze/function_setup.php";
+//include $_SERVER['DOCUMENT_ROOT']."Presenze/function_setup.php";
 ?>
+
 <!DOCTYPE html>
 
 
@@ -9,11 +11,13 @@ include "database.php";
 	<head>
 		<title>Pannello di controllo Admin</title>
 		<link rel="stylesheet" href="css/bootstrap.css" />
-        <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/style.css" />
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<!-- Custom styles for this template -->
 		<link href="css/signin.css" rel="stylesheet">
 		<script src="js/jquery.js"></script>
-        <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrap.js"></script>
 
 	</head>
 
@@ -44,10 +48,51 @@ include "database.php";
 		</div>
 		
 		<?php
-
 		if(isset($_POST['admin_login']))
 		{
-		
+			if($_SERVER['REQUEST_METHOD'] == 'POST')
+			$db_pres = new db($cartella_ini,$messaggi_errore,true);
+			
+			echo $db_pres->get_stato();
+			
+			if (!$db_pres->get_stato())
+			{
+				die;
+			}
+			$admin_email = $db_pres->pulisci_stringa($_POST['admin_email']);
+			$admin_pass = $db_pres->pulisci_stringa($_POST['admin_pass']);
+			
+			if(isset($_POST['admin_login']))
+			{
+	
+				$sel = "select * from admin where admin_email='$admin_email' AND admin_pass='$admin_pass'";
+				$rows = $db_pres->select($sel);
+				//$rows = db_select($con,$sel);
+				
+				if($rows === FALSE)
+				{
+					echo $db_pres->get_descrizione_stato()."<br>";
+					echo "...mentre stavo eseguendo: ".$sel."<br>";
+					die;
+				}
+				
+				if(count($rows) == 0)
+				{
+					echo "<script>alert('e-Mail o password non valide!Prova ancora!')</script>";
+					$db_pres->close();
+					echo "<script>window.open('admin_login.php','_self')</script>";
+					exit();
+				} else
+				{
+					$_SESSION['user_email'] = $admin_email;
+					echo "<script>alert('Login effettuato con successo!')</script>";
+					echo "<script>window.open('view_users.php','_self')</script>";
+				}
+			}
+		}
+
+/*		if(isset($_POST['admin_login']))
+		{
 			$admin_email = mysqli_real_escape_string($con,$_POST['admin_email']);
 			$admin_pass = mysqli_real_escape_string($con,$_POST['admin_pass']);
 
@@ -55,7 +100,7 @@ include "database.php";
 			$run = mysqli_query($con,$sel);
 			
 			$check = mysqli_num_rows($run);
-			
+		
 			if($check == 0)
 			{
 				echo "<script>alert('e-Mail o password non valide! Prova ancora!')</script>";
@@ -65,10 +110,8 @@ include "database.php";
 				$_SESSION['admin_email'] = $admin_email;
 				echo "<script>alert('Login effettuato con successo!')</script>";
 				echo "<script>window.open('view_users.php','_self')</script>";
-
-
 			}
-		}
+		}*/
 		?>	
 	</body>
 </html>

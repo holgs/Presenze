@@ -6,13 +6,15 @@ if(!isset($_SESSION['user_email']))
     header("location: login.php");
 } else if(isset($_GET['id']))
 	{
-		$con = connessione($messaggi_errore);
+		//$con = connessione($messaggi_errore);
+		$db_pres = new db($cartella_ini,$messaggi_errore,true);
 		
 		$edit_id = $_GET['id'];
 		$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id WHERE athl_id='$edit_id'";
 		
-		$run = mysqli_query($con,$sel);
-		$row = mysqli_fetch_array($run);
+		$run = $db_pres->select_row($sel);
+		$row = $run->fetch_array();
+//		$row = mysqli_fetch_array($run);
 		
 		$id = $row['athl_id'];
 		$name = $row['athl_name'];
@@ -40,6 +42,7 @@ if(!isset($_SESSION['user_email']))
 		<title>Visualizza dettagli Atleta</title>
         <link rel="stylesheet" href="css/bootstrap.css" />
         <link rel="stylesheet" href="css/style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.js"></script>
 	</head>
@@ -48,7 +51,7 @@ if(!isset($_SESSION['user_email']))
 		<div class="jumbotron">
 			<div class="container">
 			    <h2>Visualizza dettagli Atleta: <?php echo $name.' '.$surname ;?></h2>
-				<div class="col-md-6">
+				<div class="col-md-6 col-sm-10 col-xs-12">
 					<div class="panel panel-default">
 						<div class="panel-body text-center">
 						    <img src="images/<?php echo $image;?>" style="max-width:510px;max-height:287px;">
@@ -73,7 +76,7 @@ if(!isset($_SESSION['user_email']))
 						</div>
 					</div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-6 col-sm-10 col-xs-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">Indirizzo</div>
 						<div class="panel-body">
@@ -112,8 +115,8 @@ if(!isset($_SESSION['user_email']))
 					</div>
 				</div>
 				<div class="row">
-					<div class="md-col-4 col-md-offset-11">
-						<button type="button" class="panel-body btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+					<div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-sx-8 "> <!--  col-md-offset-10 col-sm-offset-6 col-xs-12 col-sx-offset-6 -->
+						<button type="button" class="panel-body btn btn-block btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
 						Presenze
 						</button>
 					</div>
@@ -126,7 +129,7 @@ if(!isset($_SESSION['user_email']))
 							<h4 class="modal-title" id="myModalLabel">Elenco Presenze</h4>
 						</div>
 						<div class="modal-body">
-							<?php	valuta_presenza($con,$edit_id); ?>
+							<?php	$db_pres->valuta_presenza($edit_id); ?>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
@@ -138,7 +141,7 @@ if(!isset($_SESSION['user_email']))
 				<div class="page-header text-center">
 					<p><a href="view_athletes.php">indietro</a></p>
 				</div>
-				<div class="page-header text-right">Benvenuto: <?php echo $_SESSION['user_email'];?> - <a href="index_home.php">Home</a> - <a href="logout.php">Logout</a></div>
+				<div class="page-header text-right">Benvenuto: <?php echo $_SESSION['user_email']." - ".$_SESSION['username'];?> - <a href="index_home.php">Home</a> - <a href="logout.php">Logout</a></div>
 				</div>
 		</div>
 	</body>

@@ -1,22 +1,30 @@
 <?php
 session_start();
-include "database.php";
+include "function_setup.php";
 if(!isset($_SESSION['user_email']))
 {
     header("location: login.php");
 } else
 {
+	$db_pres = new db($cartella_ini,$messaggi_errore,true);
+	
 ?>
 
 <?php
-            $email = $_SESSION['user_email'];
+      $email = $_SESSION['user_email'];
 			$sel = "SELECT * FROM register_user where user_email='$email'";
 			
-			$run = mysqli_query($con,$sel);
-			$row = mysqli_fetch_array($run);
-			
-			$id = $row['user_id'];
-			$name = $row['user_name'];
+			$risultato_query = $db_pres->select_row($sel);
+			//while($riga = mysqli_fetch_assoc($risultato_query))
+			while($riga = $risultato_query->fetch_array())
+			{
+				$righe_estratte[] = $riga;
+			}
+			//$row = $db_pres->db->fetch_array($run);
+			//print_r($righe_estratte);
+			$id = $righe_estratte[0]['user_id'];
+			$name = $righe_estratte[0]['user_name'];
+			$_SESSION['username'] = $name;
 
 ?>
 <!DOCTYPE html>
@@ -24,10 +32,10 @@ if(!isset($_SESSION['user_email']))
 	<head>
 		<title>Gestione Iscritti</title>
 		<link rel="stylesheet" href="css/bootstrap.css" />
-        <link rel="stylesheet" href="css/style.css" />
-        <script src="js/jquery.js"></script>
-        <script src="js/bootstrap.js"></script>
-
+    <link rel="stylesheet" href="css/style.css" />
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
 	</head>
 	<body>
 		<div class="jumbotron">
@@ -38,7 +46,7 @@ if(!isset($_SESSION['user_email']))
 				</div>
 
 				<div class="row">
-					<div class="col-md-4">
+					<div class="col-md-4 col-sm-8">
 						<div class="list-group">
 							<ol>
 								<a href="presence.php"><li class="list-group-item">Inserisci le presenze</li></a>
@@ -46,7 +54,7 @@ if(!isset($_SESSION['user_email']))
 						</div>
 					</div>
 					<div class="clearfix visible-xs-block"></div>
-					<div class="col-md-4">
+					<div class="col-md-4 col-sm-8">
 						<div class="list-group">
 							<ol>
 								<a href="new_athlete.php"><li class="list-group-item">Inserisci un nuovo atleta</li></a>
@@ -54,7 +62,7 @@ if(!isset($_SESSION['user_email']))
 						</div>
 					</div>
 					<div class="clearfix visible-xs-block"></div>
-					<div class="col-md-4">
+					<div class="col-md-4 col-sm-8">
 						<div class="list-group">
 							<ol>
 								<a href="view_athletes.php"><li class="list-group-item">Mostra tutti gli atleti</li></a>

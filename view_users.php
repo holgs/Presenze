@@ -1,115 +1,99 @@
 <?php
-session_start();
-include "database.php";
-//	$con = mysqli_connect("localhost","adiuva01","adiuva01","ad-iuva") or die("");
+include "function_setup.php";
+// VERIFICARE CHE LA SESSIONE SIA ANCORA APERTA
+if(!isset($_SESSION['user_email']))
+{
+    header("location: login.php");
+}
+$db_pres = new db($cartella_ini,$messaggi_errore,true);
 ?>
 <!DOCTYPE html>
 
 
 <html lang="en">
 	<head>
-		<title>View Users - Admin Panel</title>
-	<style>
-		    table{
-		        color:white;
-		        padding: 2px;
-		        width: 1000px;
-		        background: orange;
-		    }
-		    input, textarea{
-		        padding: 5px;
-		    }
-		    body{
-		        padding:0;
-		        margin:0;
-		        background: skyblue;
-		    }
-		    th{
-		    	border: 2px solid black;
-		    }
-			h3{
-				float:right;
-				margin-right:120px;
-			}
-		</style>
-		
+		<title>Visualizza tutti gli utenti</title>
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/style.css" />
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
 	</head>
+	<body>
+		<div class="jumbotron col-md-12 col-sm-12">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 col-sm-12">
+						<h2>Visualizza tutti gli utenti</h2>
+							<table class="table table-hover col-md-12 col-sm-8" align="center">
+								<tr align="left">
+									<th>Num</th>
+									<th>Foto</th>
+									<th>Nome</th>
+									<th>Cognome</th>
+									<th>Telefono</th>
+									<th>E-mail</th>
+									<th>Password</th>
+									<th></th>
+								</tr>
+								<?php
+									$sel = "SELECT * FROM register_user";
+									$run = $db_pres->select_row($sel);
+									$i = 0;
+									while($row = $run->fetch_array())
+									{
+										$id = $row['user_id'];
+										$name = $row['user_name'];
+										$surname = $row['user_surname'];
+										$email = $row['user_email'];
+										$image = $row['user_image'];
+										$phone = $row['user_no'];
+										$pwd = $row['user_pass'];
+										$i++;
+						
+								?>
+								<tr align="left">
+									<td><?php echo $i;?></td>
+									<td><img src="images/<?php echo $image;?>" class="img-thumbnail center-block" style="max-width:140px;max-height:70px;"/></td>
+									<td><?php echo $name;?></td>
+									<td><?php echo $surname;?></td>
+									<td><?php echo $phone;?></td>
+									<td><?php echo $email;?></td>
+									<td><?php echo $pwd;?></td>
+									<td>
+										<div class="btn-group btn-group-xs" role="group">
+											<a href="view_users.php?id=<?php echo $id;?>">
+											<button type="button" class="btn btn-default">Cancella</button>
+											</a>
+											<a href="edit_user.php?id=<?php echo $id; ?>">
+											<button type="button" class="btn btn-default">Modifca </button>
+											</a>
+										</div>
+									</td>
+								</tr>
+								<?php } ?>
+							</table>
+							<div class="page-header text-center">
+								<p><a href="new_user.php">Nuovo Utente</a></p>
+								<p><a href="logout.php">Logout</a></p>
+							</div>
+						<div class="page-header text-right">Benvenuto: <?php echo $_SESSION['user_email'];?> - 
+							<a href="logout.php">Logout</a>
+						</div>
+					</div>
+				</div>
+			</div>		
+		</div>
+	  <div class="clearfix"></div>
 	
-<body>
-	<table align="center">
-		<tr align="center">
-			<td colspan="7"><h2>Visualizza tutti gli utenti</h2></td>
-		</tr>
-		<tr align="center">
-			<th>S.N</th>
-			<th>Nome</th>
-			<th>E-mail</th>
-			<th>Foto</th>
-			<th>Data di creazione</th>
-			<th>Edit</th>
-			<th>Delete</th>
-		</tr>
-		<?php
-			$sel = "select * from register_user";
-			$run = mysqli_query($con,$sel);
 			
-			$i = 0;
-			
-			while($row = mysqli_fetch_array($run))
+			<?php
+			//DELETE USER
+			if(isset($_GET['id']))
 			{
-				$id = $row['user_id'];
-				$name = $row['user_name'];
-				$email = $row['user_email'];
-				$image = $row['user_image'];
-				$register_date = $row['register_date'];
-				
-				$i++;
-			
-
-		?>
-		<tr align="center">
-			<td>
-				<?php echo $i;?>
-			</td>
-			<td>
-				<?php echo $name;?>
-			</td>
-			<td>
-				<?php echo $email;?>
-			</td>
-			<td>
-				<img src="images/<?php echo $image;?>" width="50" height="50" />
-			</td>
-			<td>
-				<?php echo $register_date;?>
-			</td>
-			<td>
-				<a href="view_users.php?id=<?php echo $id; ?>">Delete</a>
-			</td>
-			<td>
-				<a href="edit_users.php?id=<?php echo $id; ?>">Edit</a>
-			</td>
-		</tr>
-		<?php } ?>
-	</table>
-	<h3>Benvenuto: <?php echo $_SESSION['admin_email'];?> <a href="admin_logout.php">Logout</a></h3>
-		
-		<?php
-		//DELETE USER
-		if(isset($_GET['id']))
-		{
-			$get_id = $_GET['id'];
-			
-			$delete = "delete from register_user where user_id='$get_id'";
-			$run_delete = mysqli_query($con,$delete);
-			
-			if($run_delete)
-			{
-				echo "<script>alert('Utente cancellato con successo')</script>";
-				echo "<script>window.open('view_users.php','_self')</script>";
-				
-			}
-		}
-		?>
-</body>
+				$db_pres->user_delete($_GET['id']);
+			}		
+			?>
+	
+	</body>
 </html>

@@ -5,7 +5,7 @@ if(!isset($_SESSION['user_email']))
 {
     header("location: login.php");
 }
-$con = connessione($messaggi_errore);
+$db_pres = new db($cartella_ini,$messaggi_errore,true);
 ?>
 
 <html>
@@ -13,6 +13,7 @@ $con = connessione($messaggi_errore);
         <title>Inserisci presenze</title>
         <link rel="stylesheet" href="css/bootstrap.css" />
         <link rel="stylesheet" href="css/style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.js"></script>
     </head>
@@ -28,18 +29,18 @@ $con = connessione($messaggi_errore);
 					<!-- INIZIO -->
 					<?php
 						$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id LEFT JOIN athl_presence ON athl_id = athl_pres_athl_id AND athl_pres_date = CURDATE() GROUP BY athl_id";
-						$run = mysqli_query($con,$sel);
+						$run = $db_pres->select_row($sel);
 						
 						while($row = mysqli_fetch_assoc($run)){
 							$id = $row['athl_id'];
 							$athlete = $row['athl_name']." ".$row['athl_surname'];
-							$pres_recorded = $row['athl_pres_presence'];
+							$pres_recorded = $row['athl_pres_presence']; // style='height:350px;margin:10px;' e style='max-width:320px;max-height:200px'
 							echo "
 									<div class=''>
-										<div class='col-sm-6 col-md-4'>
-											<div class='thumbnail' style='height:350px;margin:10px;'>
-												<div style='height:200px;'>
-													<img src='images/$row[athl_image]' class='img-thumbnail center-block' style='max-width:320px;max-height:200px'/>
+										<div class='col-md-6 col-sm-12 col-xs-12'>
+											<div class='thumbnail' >
+												<div style='height:60%;'>
+													<img src='images/$row[athl_image]' class='img-thumbnail center-block' style='max-height:100%;' />
 												</div>
 												<div style='height:60px;'>
 													<div class='caption text-center'>
@@ -49,12 +50,12 @@ $con = connessione($messaggi_errore);
 							if($pres_recorded ==''){				
 								echo "					
 											<div class='row' style='height:90px;'>
-												<div class='col-sm-5 col-md-offset-1'>
-													<a href='presence.php?id=$id&presence=1'><button class='btn btn-success btn-lg'>PRESENTE</button>
-													</a>
+												<div class='col-md-5 col-md-offset-1'>
+													<a href='presence.php?id=$id&presence=1'><button class='btn btn-success btn-block'>PRESENTE</button>
+													</a><br>
 												</div>
-												<div class='col-sm-5'>
-													<a href='presence.php?id=$id&presence=0'><button class='btn btn-danger btn-lg'>ASSENTE</button>
+												<div class='col-md-5'>
+													<a href='presence.php?id=$id&presence=0'><button class='btn btn-danger btn-block'>ASSENTE</button>
 													</a>
 												</div>
 											</div>
@@ -62,12 +63,12 @@ $con = connessione($messaggi_errore);
 							} else {
 								echo "					
 											<div class='row' style='height:90px;'>
-												<div class='col-sm-5 col-md-offset-1'>
-													<a href='presence.php?id=$id&presence=1'><button class='btn btn-success btn-lg' disabled='disabled'>PRESENTE</button>
-													</a>
+												<div class='col-md-5 col-md-offset-1'>
+													<a href='presence.php?id=$id&presence=1'><button class='btn btn-success btn-block' disabled='disabled'>PRESENTE</button>
+													</a><br>
 												</div>
-												<div class='col-sm-5'>
-													<a href='presence.php?id=$id&presence=0'><button class='btn btn-danger btn-lg' disabled='disabled'>ASSENTE</button>
+												<div class='col-md-5'>
+													<a href='presence.php?id=$id&presence=0'><button class='btn btn-danger btn-block' disabled='disabled'>ASSENTE</button>
 													</a>
 												</div>
 											</div>
@@ -86,7 +87,7 @@ $con = connessione($messaggi_errore);
 				<div class="page-header text-center">
 					<p><a href="index_home.php">Finito</a></p>
 				</div>
-				<div class="page-header text-right">Benvenuto: <?php echo $_SESSION['user_email'];?> - <a href="index_home.php">Home</a> - <a href="logout.php">Logout</a></div>
+				<div class="page-header text-right">Benvenuto: <?php echo $_SESSION['user_email']." - ".$_SESSION['username'];?> - <a href="index_home.php">Home</a> - <a href="logout.php">Logout</a></div>
 			</div>
 			</div>
 		</div>
@@ -97,7 +98,7 @@ $con = connessione($messaggi_errore);
 		//INSERISCI PRESENZA
 		if(isset($_GET['id']) && isset($_GET['presence']))
 		{
-			athlete_presence($con,$_GET['id'],$_GET['presence']);
+			$db_pres->athlete_presence($_GET['id'],$_GET['presence']);
 			echo "<script>window.open('presence.php','_self')</script>";
 		}
 		?>
