@@ -46,27 +46,27 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 						</div>
 						
 						<div class="form-group"><label>Data di nascita:</label>
-						<input type="date" class="form-control" name="athl_b_day" required="required"/></div>
+						<input type="date" class="form-control" name="athl_b_day" /></div>
 						
 						<div class="form-group"><label>Email</label>
-						<input type="text" class="form-control" name="athl_email" placeholder="Inserisci la email" required="required"/></div>
+						<input type="text" class="form-control" name="athl_email" placeholder="Inserisci la email" /></div>
 						
 						<div class="form-group"><label>Numero di Telefono:</label>
-						<input type="text" class="form-control" name="athl_no" placeholder="Inserisci il tuo Numero di telefono" required="required"/></div>
+						<input type="text" class="form-control" name="athl_no" placeholder="Inserisci il tuo Numero di telefono" /></div>
 					</div>
 					<div class="col-md-6 col-sm-12 col-xs-12">
 
 						<div class="form-group"><label>Indirizzo:</label>
-						<input type="text" class="form-control" name="athl_address" placeholder="Inserisci il tuo Indirizzo" required="required"></div>
+						<input type="text" class="form-control" name="athl_address" placeholder="Inserisci il tuo Indirizzo" ></div>
 						
 						<div class="form-group"><label>Città:</label>
-						<input type="text" class="form-control" name="athl_city" placeholder="Inserisci la Città" required="required"></div>
+						<input type="text" class="form-control" name="athl_city" placeholder="Inserisci la Città" ></div>
 						
 						<div class="form-group"><label>CAP:</label>
-						<input type="text" class="form-control" name="athl_zip" placeholder="Inserisci il CAP" required="required"></div>
+						<input type="text" class="form-control" name="athl_zip" placeholder="Inserisci il CAP" ></div>
 						
 						<div class="form-group"><label>Provincia:</label>
-						<input type="text" class="form-control" name="athl_pr" placeholder="Inserisci la Procincia" required="required"></div>
+						<input type="text" class="form-control" name="athl_pr" placeholder="Inserisci la Procincia" ></div>
 						
 						<div class="form-group"><label>Cintura</label>
 							<select name="athl_ryu_belt" class="form-control" required="required">
@@ -87,7 +87,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 					<!-- IMMAGINE -->
 					<div class="col-md-12 col-xs-12">
 						<div class="form-group"><label>Immagine:</label>
-							<input class="btn btn-default" type="file" name="athl_image" required="required"/>
+							<input class="btn btn-default" type="file" name="athl_image" />
 						</div>
 					</div>
 					<div class="row">

@@ -1,6 +1,7 @@
 <?php
 include "setup.php";
 //include($_SERVER['DOCUMENT_ROOT']."/setup.php");
+//include '../php/ext/SimpleImage.php';
 
 //CLASSE DB
 class db
@@ -189,6 +190,45 @@ class db
 		}
 	}
 	
+	public function inserisci_img($athl_image,$athl_tmp,$athl_img_size)
+	{
+		//$athl_image = $_FILES['athl_image']['tmp_name'];
+		//$athl_tmp = $_FILES['athl_image']['tmp_name'];
+		//$athl_img_size = $_FILES['athl_image']['size'];
+		//echo "<script>alert('File Caricato ".$athl_image."')</script>";
+				
+		/*move_uploaded_file($athl_tmp,"images/$athl_image");
+		if($athl_img_size > 4194304){
+			echo "<script>alert('File Immagine troppo grande')</script>";
+		}
+		$name = $this->pulisci_stringa($_POST['athl_name']).$this->pulisci_stringa($_POST['athl_surname']).rand(1,5000);
+		rename($athl_image,$file_name);
+		echo "<script>alert('IMMAGINE CARICATA)</script>";
+		error_reporting(E_ALL & ~E_NOTICE);
+		try {
+		  // Create a new SimpleImage object
+		  $image = new \claviska\SimpleImage();
+		
+		  // Manipulate it
+		  $image
+		    ->fromFile($file_name)              	// load file
+		    ->autoOrient()                        // adjust orientation based on exif data
+		    ->bestFit(300, 400)                   // proportinoally resize to fit inside a 300x400 box
+		    ->border('white', 5)                  // add a 5 pixel black border
+		    ->toScreen()                        // output to the screen
+		    ->toFile($file_name);
+
+		} 
+		catch(Exception $err) {
+		  // Handle errors
+		  echo $err->getMessage();
+		}
+		echo "<script>alert('IMMAGINE ELABORATA)</script>";		
+		return $file_name;*/
+		//return $athl_image;
+	}
+	
+	
 	public function inserisci_atleta()
 	{
 		$athl_name = $this->pulisci_stringa($_POST['athl_name']);
@@ -205,18 +245,20 @@ class db
 	
 		$athl_image = $_FILES['athl_image']['name'];
 		$athl_tmp = $_FILES['athl_image']['tmp_name'];
+		//$athl_image = inserisci_img($_FILES['athl_image']['name'],$_FILES['athl_image']['tmp_name'],$_FILES['athl_image']['size']);
+		//echo "<script>alert('File Caricato ".$athl_image."')</script>";
 	
-		if($athl_address =='' OR $athl_image =='' OR $athl_gender='')
+		/*if($athl_address =='' OR $athl_image =='' OR $athl_gender='')
 		{
 			echo "<script>alert('Compila tutti i campi!')</script>";
 			exit();
-		}
+		}*/
 
-		if(!filter_var($athl_email,FILTER_VALIDATE_EMAIL))
+		/*if(!filter_var($athl_email,FILTER_VALIDATE_EMAIL))
 		{
 			echo "<script>alert('La tua email non è valida!')</script>";
 			exit();
-		}
+		}*/
 		
 		move_uploaded_file($athl_tmp,"images/$athl_image");
 		
