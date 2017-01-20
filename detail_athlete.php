@@ -27,6 +27,7 @@ if(!isset($_SESSION['user_email']))
 		$phone_no = $row['athl_no'];
 		$email = $row['athl_email'];
 		$image = $row['athl_image'];
+		$class = $row['athl_class'];
 		$register_date = $row['athl_register_date'];
 		$belt = $row['athl_ryu_belt'];
 		$data_belt = date_create($row['athl_ryu_data']);
@@ -54,7 +55,7 @@ if(!isset($_SESSION['user_email']))
 				<div class="col-md-6 col-sm-10 col-xs-12">
 					<div class="panel panel-default">
 						<div class="panel-body text-center">
-						    <img src="images/<?php echo $image;?>" style="max-width:510px;max-height:287px;">
+						    <img src="images/foto/<?php echo $image;?>" style="max-width:510px;max-height:287px;">
 						</div>
 					</div>
 					<div class="panel panel-default">
@@ -101,19 +102,33 @@ if(!isset($_SESSION['user_email']))
 						    <?php echo $pr ;?>
 						</div>
 					</div>
-					<div class="panel panel-default">
-						<div class="panel-heading">Cintura</div>
-						<div class="panel-body">
-						    <?php echo $belt ;?>
-						</div>
-					</div>
-					<div class="panel panel-default">
-						<div class="panel-heading">Data passaggio cintura</div>
-						<div class="panel-body">
-						    <?php echo date_format($data_belt,'d/m/Y') ;?>
-						</div>
-					</div>
 				</div>
+					<div class="col-md-3 col-sm-10 col-xs-12">
+						<div class="panel panel-default">
+							<div class="panel-heading">Cintura</div>
+							<div class="panel-body">
+							    <?php echo $belt ;?>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-10 col-xs-12">			
+						<div class="panel panel-default">
+							<div class="panel-heading">Data passaggio cintura</div>
+							<div class="panel-body">
+							    <?php echo date_format($data_belt,'d/m/Y') ;?>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-10 col-xs-12">								
+						<div class="panel panel-default">
+							<div class="panel-heading">Classe</div>
+							<div class="panel-body">
+							    <?php echo $class ;?>
+							</div>
+						</div>		
+					</div>			
+					
+					
 				<div class="row">
 					<div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-sx-8 "> <!--  col-md-offset-10 col-sm-offset-6 col-xs-12 col-sx-offset-6 -->
 						<button type="button" class="panel-body btn btn-block btn-primary btn-lg" data-toggle="modal" data-target="#myModal">

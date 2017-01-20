@@ -83,6 +83,16 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 								<option>Nera - 5° DAN</option>
 							</select>
 						</div>
+
+						<div class="form-group"><label>Classe</label>
+							<select name="athl_class" class="form-control" required="required">
+								<option>Bambini</option>
+								<option>Ragazzi</option>
+								<option>Adulti</option>
+							</select>
+						</div>
+
+
 					</div>
 					<!-- IMMAGINE -->
 					<div class="col-md-12 col-xs-12">

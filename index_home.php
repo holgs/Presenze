@@ -49,28 +49,47 @@ if(!isset($_SESSION['user_email']))
 					<div class="col-md-4 col-sm-8">
 						<div class="list-group">
 							<ol>
-								<a href="presence.php"><li class="list-group-item">Inserisci le presenze</li></a>
+								<a href="presence.php?class=Bambini"><li class="list-group-item center-block"><b>Inserisci Presenze Bambini</b></li></a>
 							</ol>	
 						</div>
 					</div>
-					<div class="clearfix visible-xs-block"></div>
 					<div class="col-md-4 col-sm-8">
 						<div class="list-group">
 							<ol>
-								<a href="new_athlete.php"><li class="list-group-item">Inserisci un nuovo atleta</li></a>
+								<a href="presence.php?class=Ragazzi"><li class="list-group-item center-block"><b>Inserisci Presenze Ragazzi</b></li></a>
 							</ol>	
 						</div>
-					</div>
-					<div class="clearfix visible-xs-block"></div>
+					</div>					
 					<div class="col-md-4 col-sm-8">
 						<div class="list-group">
 							<ol>
-								<a href="view_athletes.php"><li class="list-group-item">Mostra tutti gli atleti</li></a>
+								<a href="presence.php?class=Adulti"><li class="list-group-item center-block"><b>Inserisci Presenze Adulti</b></li></a>
 							</ol>	
 						</div>
 					</div>
-					<div class="clearfix visible-xs-block"></div>
+					
 				</div>
+				<div class="clearfix visible-xs-block"></div>
+					<div class="row">
+						<div class="col-md-4 col-sm-8">
+							<div class="list-group">
+								<ol>
+									<a href="new_athlete.php"><li class="list-group-item"><b>Inserisci un nuovo atleta</b></li></a>
+								</ol>	
+							</div>
+						</div>
+						<div class="clearfix visible-xs-block"></div>
+						<div class="col-md-4 col-sm-8">
+							<div class="list-group">
+								<ol>
+									<a href="view_athletes.php"><li class="list-group-item"><b>Mostra tutti gli atleti</b></li></a>
+								</ol>	
+							</div>
+						</div>
+						<div class="clearfix visible-xs-block"></div>
+					</div>
+				</div>
+				
 				<div class="page-header text-center">
 					<p><a href="logout.php">Logout</a>	</p>
 				</div>

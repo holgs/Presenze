@@ -28,7 +28,8 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 					<!-- PIASTRELLA CON PRODOTTO SINGOLO-->
 					<!-- INIZIO -->
 					<?php
-						$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id LEFT JOIN athl_presence ON athl_id = athl_pres_athl_id AND athl_pres_date = CURDATE() GROUP BY athl_id";
+						$class = $_REQUEST['class'];
+						$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id LEFT JOIN athl_presence ON athl_id = athl_pres_athl_id AND athl_pres_date = CURDATE()  WHERE athl_class ='$class' GROUP BY athl_id";
 						$run = $db_pres->select_row($sel);
 						
 						while($row = mysqli_fetch_assoc($run)){
@@ -40,7 +41,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 										<div class='col-md-6 col-sm-12 col-xs-12'>
 											<div class='thumbnail' >
 												<div style='height:60%;'>
-													<img src='images/$row[athl_image]' class='img-thumbnail center-block' style='max-height:100%;' />
+													<img src='images/foto/$row[athl_image]' class='img-thumbnail center-block' style='max-height:100%;' />
 												</div>
 												<div style='height:60px;'>
 													<div class='caption text-center'>

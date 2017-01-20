@@ -34,6 +34,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 									<th>Data di nascita</th>
 									<th>E-mail</th>
 									<th>Telefono</th>
+									<th>Classe</th>
 									<th>Cintura</th>
 									<th></th>
 								</tr>
@@ -50,6 +51,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 										$b_day = date_create($row['athl_b_day']);
 										$image = $row['athl_image'];
 										$phone = $row['athl_no'];
+										$class = $row['athl_class'];
 										$belt = $row['athl_ryu_belt'];
 										$ryu_id = $row['athl_ryu_athl_id'];
 										$i++;
@@ -57,12 +59,13 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 								?>
 								<tr align="left">
 									<td><?php echo $i;?></td>
-									<td><img src="images/<?php echo $image;?>" class="img-thumbnail center-block" style="max-width:140px;max-height:70px;"/></td>
+									<td><img src="images/foto/<?php echo $image;?>" class="img-thumbnail center-block" style="max-width:140px;max-height:70px;"/></td>
 									<td><?php echo $name;?></td>
 									<td><?php echo $surname;?></td>
 									<td><?php echo date_format($b_day,'d/m/Y');?></td>
 									<td><?php echo $email;?></td>
 									<td><?php echo $phone;?></td>
+									<td><?php echo $class;?></td>
 									<td><?php echo $belt;?></td>
 									<td>
 										<div class="btn-group btn-group-xs" role="group">

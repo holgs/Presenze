@@ -25,6 +25,7 @@ if(!isset($_SESSION['user_email']))
 		$phone_no = $row['athl_no'];
 		$email = $row['athl_email'];
 		$image = $row['athl_image'];
+		$class = $row['athl_class'];
 		$register_date = $row['athl_register_date'];
 		$belt = $row['athl_ryu_belt'];
 		$data_belt = date_create($row['athl_ryu_data']);	
@@ -97,23 +98,35 @@ if(!isset($_SESSION['user_email']))
 						<label>Provincia:</label>
 						<input type="text" class="form-control" name="athl_pr" value="<?php echo $pr; ?>"/>
 					</div>
-					<div class="form-group">
-						<label>Cintura:</label>
-						<select name="athl_ryu_belt" class="form-control" >
-							<option><?php echo $belt;?></option>
-							<option>Bianca</option>
-							<option>Gialla</option>
-							<option>Arancione</option>
-							<option>Verde</option>
-							<option>Blu</option>
-							<option>Marrone</option>
-							<option>Nera - 1° DAN</option>
-							<option>Nera - 2° DAN</option>
-							<option>Nera - 3° DAN</option>
-							<option>Nera - 4° DAN</option>
-							<option>Nera - 5° DAN</option>
-						</select>
+					<div class="col-md-6 col-sm-6">
+						<div class="form-group"><label>Classe</label>
+							<select name="athl_class" class="form-control" required="required">
+								<option><?php echo $class;?></option>	
+								<option>Bambini</option>
+								<option>Ragazzi</option>
+								<option>Adulti</option>
+							</select>
+						</div>
 					</div>
+					<div class="col-md-6 col-sm-6">						
+						<div class="form-group">
+							<label>Cintura:</label>
+							<select name="athl_ryu_belt" class="form-control" >
+								<option><?php echo $belt;?></option>
+								<option>Bianca</option>
+								<option>Gialla</option>
+								<option>Arancione</option>
+								<option>Verde</option>
+								<option>Blu</option>
+								<option>Marrone</option>
+								<option>Nera - 1° DAN</option>
+								<option>Nera - 2° DAN</option>
+								<option>Nera - 3° DAN</option>
+								<option>Nera - 4° DAN</option>
+								<option>Nera - 5° DAN</option>
+							</select>
+						</div>
+					</div>	
 					<div class="col-md-6 col-sm-6">
 						<div class="form-group">
 							<label>Data di Ottenimento Cintura</label>
@@ -126,7 +139,7 @@ if(!isset($_SESSION['user_email']))
 						<button type="button" class="form-control btn btn-default" data-toggle="modal" data-target="#myModal">Cambia immagine</button>
 						</div>
 					</div>
-					</div>
+				</div>
 	
 				<div class="row">
 					<div class="form-group col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-sx-8 ">
@@ -181,7 +194,7 @@ if(!isset($_SESSION['user_email']))
 	
 	if(isset($_POST['update_image']))
 	{
-		$db_pres->aggiorna_immagine($id);
+		$db_pres->aggiorna_immagine($id,$name,$surname);
 	}
 	$db_pres->close();
 	?>
