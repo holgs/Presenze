@@ -47,14 +47,14 @@ if(!isset($_SESSION['user_email']))
 
 				<div class="row">
 					<div class="col-md-4 col-sm-8">
-						<div class="list-group">
+						<div class="list-group ">
 							<ol>
 								<a href="presence.php?class=Bambini"><li class="list-group-item center-block"><b>Inserisci Presenze Bambini</b></li></a>
 							</ol>	
 						</div>
 					</div>
 					<div class="col-md-4 col-sm-8">
-						<div class="list-group">
+						<div class="list-group ">
 							<ol>
 								<a href="presence.php?class=Ragazzi"><li class="list-group-item center-block"><b>Inserisci Presenze Ragazzi</b></li></a>
 							</ol>	
@@ -67,8 +67,8 @@ if(!isset($_SESSION['user_email']))
 							</ol>	
 						</div>
 					</div>
-					
 				</div>
+				
 				<div class="clearfix visible-xs-block"></div>
 					<div class="row">
 						<div class="col-md-4 col-sm-8">
@@ -82,11 +82,45 @@ if(!isset($_SESSION['user_email']))
 						<div class="col-md-4 col-sm-8">
 							<div class="list-group">
 								<ol>
-									<a href="view_athletes.php"><li class="list-group-item"><b>Mostra tutti gli atleti</b></li></a>
+									<a href="view_athletes.php?ordina=athl_name&come=ASC"><li class="list-group-item"><b>Mostra tutti gli atleti</b></li></a>
 								</ol>	
 							</div>
 						</div>
 						<div class="clearfix visible-xs-block"></div>
+						<div class="col-md-4 col-sm-8">
+							<div class="list-group">
+								<ol>
+									<a href="view_presenze.php"><li class="list-group-item"><b>Mostra report presenze</b></li></a>
+								</ol>	
+							</div>
+						</div>
+					</div>
+					
+					<div class="clearfix visible-xs-block"></div>
+					<div class="row">
+						<div class="col-md-4 col-sm-8">
+							<div class="list-group">
+								<ol>
+									<a href="export_athletes.php"><li class="list-group-item"><b>Esporta Atleti</b></li></a>
+								</ol>	
+							</div>
+						</div>
+						<div class="clearfix visible-xs-block"></div>
+						<div class="col-md-4 col-sm-8">
+							<div class="list-group">
+								<ol>
+									<a href="export_presenze_totali.php"><li class="list-group-item"><b>Esporta Presenze Totali</b></li></a>
+								</ol>	
+							</div>
+						</div>
+						<div class="clearfix visible-xs-block"></div>
+						<div class="col-md-4 col-sm-8">
+							<div class="list-group">
+								<ol>
+									<a href="#"><li class="list-group-item"><b></b></li></a>
+								</ol>	
+							</div>
+						</div>
 					</div>
 				</div>
 				

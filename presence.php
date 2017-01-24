@@ -28,7 +28,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 					<!-- PIASTRELLA CON PRODOTTO SINGOLO-->
 					<!-- INIZIO -->
 					<?php
-						$class = $_REQUEST['class'];
+						$class = $_REQUEST['class'];			
 						$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id LEFT JOIN athl_presence ON athl_id = athl_pres_athl_id AND athl_pres_date = CURDATE()  WHERE athl_class ='$class' GROUP BY athl_id";
 						$run = $db_pres->select_row($sel);
 						
@@ -36,6 +36,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 							$id = $row['athl_id'];
 							$athlete = $row['athl_name']." ".$row['athl_surname'];
 							$pres_recorded = $row['athl_pres_presence']; // style='height:350px;margin:10px;' e style='max-width:320px;max-height:200px'
+
 							echo "
 									<div class=''>
 										<div class='col-md-6 col-sm-12 col-xs-12'>
@@ -52,11 +53,11 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 								echo "					
 											<div class='row' style='height:90px;'>
 												<div class='col-md-5 col-md-offset-1'>
-													<a href='presence.php?id=$id&presence=1'><button class='btn btn-success btn-block'>PRESENTE</button>
+													<a href='presence.php?id=$id&presence=1&class=$class'><button class='btn btn-success btn-block'>PRESENTE</button>
 													</a><br>
 												</div>
 												<div class='col-md-5'>
-													<a href='presence.php?id=$id&presence=0'><button class='btn btn-danger btn-block'>ASSENTE</button>
+													<a href='presence.php?id=$id&presence=0&class=$class'><button class='btn btn-danger btn-block'>ASSENTE</button>
 													</a>
 												</div>
 											</div>
@@ -65,11 +66,11 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 								echo "					
 											<div class='row' style='height:90px;'>
 												<div class='col-md-5 col-md-offset-1'>
-													<a href='presence.php?id=$id&presence=1'><button class='btn btn-success btn-block' disabled='disabled'>PRESENTE</button>
+													<a href='presence.php'><button class='btn btn-success btn-block' disabled='disabled'>PRESENTE</button>
 													</a><br>
 												</div>
 												<div class='col-md-5'>
-													<a href='presence.php?id=$id&presence=0'><button class='btn btn-danger btn-block' disabled='disabled'>ASSENTE</button>
+													<a href='presence.php'><button class='btn btn-danger btn-block' disabled='disabled'>ASSENTE</button>
 													</a>
 												</div>
 											</div>
@@ -82,6 +83,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 									
 							";
 						}
+						////id=$id&presence=1
 					?>
 					<!-- FINE -->
 				</div>
@@ -100,7 +102,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 		if(isset($_GET['id']) && isset($_GET['presence']))
 		{
 			$db_pres->athlete_presence($_GET['id'],$_GET['presence']);
-			echo "<script>window.open('presence.php','_self')</script>";
+			echo "<script>window.open('presence.php?class=".$_GET['class']."','_self')</script>";
 		}
 		?>
 			

@@ -29,17 +29,108 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 								<tr align="left">
 									<th>Num</th>
 									<th>Foto</th>
-									<th>Nome</th>
-									<th>Cognome</th>
+									<th>
+										<a href="view_athletes.php?ordina=athl_name&come=
+											<?php 
+												if($_GET['come']=="ASC")
+												{
+													$come="DESC";
+												}
+												else 
+												{
+													$come="ASC";	
+												}
+												echo $come;
+											?>
+											">
+											Nome
+										</a>
+									</th>
+									<th>
+										<a href="view_athletes.php?ordina=athl_surname&come=
+											<?php 
+												if($_GET['come']=="ASC")
+												{
+													$come="DESC";
+												}
+												else 
+												{
+													$come="ASC";	
+												}
+												echo $come;
+											?>
+											">
+											Cognome
+										</a>
+									</th>
 									<th>Data di nascita</th>
 									<th>E-mail</th>
 									<th>Telefono</th>
-									<th>Classe</th>
-									<th>Cintura</th>
+									<th>
+										<a href="view_athletes.php?ordina=athl_class&come=
+											<?php 
+												if($_GET['come']=="ASC")
+												{
+													$come="DESC";
+												}
+												else 
+												{
+													$come="ASC";	
+												}
+												echo $come;
+											?>
+											">
+											Classe
+										</a>
+									</th>
+									<th>
+										<a href="view_athletes.php?ordina=athl_ryu_nbelt&come=
+											<?php 
+												if($_GET['come']=="ASC")
+												{
+													$come="DESC";
+												}
+												else 
+												{
+													$come="ASC";	
+												}
+												echo $come;
+											?>
+											">
+											Cintura
+										</a>
+									</th>
 									<th></th>
 								</tr>
 								<?php
-									$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id";
+								// BLOCCO GESTIONE ORDINAMENTO -- INIZIO
+								$ordina = $_GET['ordina'];
+								$come = $_GET['come'];
+								if($ordina == "" && $come =="")
+								{
+									$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY athl_name ASC";									
+								}
+								else 
+								{
+									switch ($come) 
+									{
+										case 'DESC':
+											$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina DESC";
+											$come == "ASC";
+											break;
+										case 'ASC':
+											$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina ASC";
+											$come == "DESC";
+											break;
+										default:
+											$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina ASC";
+											break;
+									}
+								}
+//								echo "<script>alert('".$sel."')</script>";
+								// BLOCCO GESTIONE ORDINAMENTO -- FINE
+																
+									//$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id";
 									$run = $db_pres->select_row($sel);
 									$i = 0;
 									while($row = $run->fetch_array())
@@ -53,6 +144,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 										$phone = $row['athl_no'];
 										$class = $row['athl_class'];
 										$belt = $row['athl_ryu_belt'];
+										$nbelt = $row['athl_ryu_nbelt'];
 										$ryu_id = $row['athl_ryu_athl_id'];
 										$i++;
 						

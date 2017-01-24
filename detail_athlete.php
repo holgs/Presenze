@@ -30,6 +30,7 @@ if(!isset($_SESSION['user_email']))
 		$class = $row['athl_class'];
 		$register_date = $row['athl_register_date'];
 		$belt = $row['athl_ryu_belt'];
+		$nbelt = $row['athl_ryu_nbelt'];
 		$data_belt = date_create($row['athl_ryu_data']);
 				
 	}
@@ -154,7 +155,7 @@ if(!isset($_SESSION['user_email']))
 				  </div>
 				</div>
 				<div class="page-header text-center">
-					<p><a href="view_athletes.php">indietro</a></p>
+					<p><a href="view_athletes.php?ordina=athl_name&come=ASC">indietro</a></p>
 				</div>
 				<div class="page-header text-right">Benvenuto: <?php echo $_SESSION['user_email']." - ".$_SESSION['username'];?> - <a href="index_home.php">Home</a> - <a href="logout.php">Logout</a></div>
 				</div>

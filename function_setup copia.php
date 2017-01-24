@@ -1,7 +1,7 @@
 <?php
 include "setup.php";
 //include($_SERVER['DOCUMENT_ROOT']."/setup.php");
-include '../php/ext/SimpleImage.php';
+//include '../php/ext/SimpleImage.php';
 
 //CLASSE DB
 class db
@@ -148,15 +148,6 @@ class db
 
 	public function athlete_delete($get_id,$get_ryu_id)
 	{
-		$get_image_name_sql = "SELECT * FROM athletes WHERE athl_id='$get_id'";
-		$risultato = $this->select_row($get_image_name_sql);
-		$row = $risultato->fetch_array();
-		
-		$get_image_name = $row['athl_image'];
-		echo "<script>alert('File da cancellare ".$get_image_name."')</script>";
-		
-		unlink('images/foto/'.$get_image_name);
-		
 		$delete = "DELETE FROM athletes WHERE athl_id='$get_id'";
 		$run_delete = $this->db->query($delete);
 			
@@ -199,50 +190,48 @@ class db
 		}
 	}
 	
-	public function assegna_cintura($belt)
+	public function inserisci_img($athl_image,$athl_tmp,$athl_img_size)
 	{
-		$n_cintura = 0;
-		switch ($belt) {
-			case 'Bianca':
-				$n_cintura = 1;
-				break;
-			case 'Gialla':
-				$n_cintura = 2;
-				break;
-			case 'Arancione':
-				$n_cintura = 3;
-				break;
-			case 'Verde':
-				$n_cintura = 4;
-				break;
-			case 'Blu':
-				$n_cintura = 5;
-				break;
-			case 'Marrone':
-				$n_cintura = 6;
-				break;
-			case 'Nera - 1° DAN':
-				$n_cintura = 7;
-				break;
-			case 'Nera - 2° DAN':
-				$n_cintura = 8;
-				break;
-			case 'Nera - 3° DAN':
-				$n_cintura = 9;
-				break;
-			case 'Nera - 4° DAN':
-				$n_cintura = 10;
-				break;
-			case 'Nera - 5° DAN':
-				$n_cintura = 11;
-				break;							
-			default:
-				echo "<script>alert('CINTURA NON CONVERTITA')</script>";
-				break;
+		//$athl_image = $_FILES['athl_image']['tmp_name'];
+		//$athl_tmp = $_FILES['athl_image']['tmp_name'];
+		//$athl_img_size = $_FILES['athl_image']['size'];
+		echo "<script>alert('File Caricato ".$athl_image." - ".$athl_img_size."')</script>";
+				
+		/*move_uploaded_file($athl_tmp,"images/$athl_image");
+		if($athl_img_size > 4194304){
+			echo "<script>alert('File Immagine troppo grande')</script>";
 		}
-	return $n_cintura;
-	}
+		 */
+		$ext = substr($athl_image,-3);
+		echo "<script>alert('Estensione ".$ext."')</script>";
+		
+		$file_name = substr($this->pulisci_stringa($_POST['athl_name']),0,3).substr($this->pulisci_stringa($_POST['athl_surname']),0,3).rand(1,5000).".".$ext;
+		echo "<script>alert('File Caricato ".$file_name."')</script>";
+		
+		rename($athl_image,$file_name);
+		/*echo "<script>alert('IMMAGINE CARICATA)</script>";
+		error_reporting(E_ALL & ~E_NOTICE);
+		try {
+		  // Create a new SimpleImage object
+		  $image = new \claviska\SimpleImage();
+		
+		  // Manipulate it
+		  $image
+		    ->fromFile($file_name)              	// load file
+		    ->autoOrient()                        // adjust orientation based on exif data
+		    ->bestFit(300, 400)                   // proportinoally resize to fit inside a 300x400 box
+		    ->border('white', 5)                  // add a 5 pixel black border
+		    ->toScreen()                        // output to the screen
+		    ->toFile($file_name);
 
+		} 
+		catch(Exception $err) {
+		  // Handle errors
+		  echo $err->getMessage();
+		}
+		echo "<script>alert('IMMAGINE ELABORATA)</script>";	*/	
+		return $file_name;
+	}
 	
 	
 	public function inserisci_atleta()
@@ -257,14 +246,13 @@ class db
 		$athl_no = $this->pulisci_stringa($_POST['athl_no']);
 		$athl_email = $this->pulisci_stringa($_POST['athl_email']);
 		$athl_gender = $this->pulisci_stringa($_POST['athl_gender']);
-		$athl_class = $this->pulisci_stringa($_POST['athl_class']);
 		$athl_ryu_belt = $this->pulisci_stringa($_POST['athl_ryu_belt']);
-		$athl_ryu_nbelt = $this->assegna_cintura($athl_ryu_belt);
-		echo "<script>alert('CINTURA CONVERTITA in ".$athl_ryu_nbelt."')</script>";
-		
+	
 		$athl_image = $_FILES['athl_image']['name'];
 		$athl_tmp = $_FILES['athl_image']['tmp_name'];
 		$athl_image = $this->inserisci_img($_FILES['athl_image']['name'],$_FILES['athl_image']['tmp_name'],$_FILES['athl_image']['size']);
+		//$athl_image = inserisci_img($_FILES['athl_image']['name'],$_FILES['athl_image']['tmp_name'],$_FILES['athl_image']['size']);
+		//echo "<script>alert('File Caricato ".$athl_image."')</script>";
 	
 		/*if($athl_address =='' OR $athl_image =='' OR $athl_gender='')
 		{
@@ -278,13 +266,12 @@ class db
 			exit();
 		}*/
 		
-		//move_uploaded_file($athl_tmp,"images/$athl_image");
+		move_uploaded_file($athl_tmp,"images/$athl_image");
 		
 		// QUERY INSERIMENTO ATLETA
 		$insert = "INSERT INTO athletes 
-		(athl_name,athl_surname,athl_email,athl_address,athl_zip,athl_city,athl_pr,athl_gender,athl_b_day,athl_class,athl_no,athl_image,athl_register_date) 
-		VALUES ('$athl_name','$athl_surname','$athl_email','$athl_address','$athl_zip','$athl_city','$athl_pr','$athl_gender','$athl_b_day','$athl_class','$athl_no','$athl_image',NOW())";
-		echo "<script>alert('QUERY: <br>".$insert."')</script>";
+		(athl_name,athl_surname,athl_email,athl_address,athl_zip,athl_city,athl_pr,athl_gender,athl_b_day,athl_no,athl_image,athl_register_date) 
+		VALUES ('$athl_name','$athl_surname','$athl_email','$athl_address','$athl_zip','$athl_city','$athl_pr','$athl_gender','$athl_b_day','$athl_no','$athl_image',NOW())";
 		$run_insert = $this->insert($insert);
 		
 		// OTTENIMENTO ATHL_ID APPENA INSERITO
@@ -296,7 +283,7 @@ class db
 		//$athl_id = $athl_row[0];
 		
 		// QUERY DI INSERIMENTO CINTURA
-		$insert_belt = "INSERT INTO athletes_ryu (athl_ryu_athl_id,athl_ryu_belt,athl_ryu_nbelt,athl_ryu_data) VALUES ('$athl_id','$athl_ryu_belt','$athl_ryu_nbelt',NOW())";
+		$insert_belt = "INSERT INTO athletes_ryu (athl_ryu_athl_id,athl_ryu_belt,athl_ryu_data) VALUES ('$athl_id','$athl_ryu_belt',NOW())";
 		$run_insert_belt = $this->insert($insert_belt);
 		
 		// VERIFICA CORRETTO INSERIMENTO ATLETA e CINTURA
@@ -330,7 +317,7 @@ class db
 			exit();
 		}
 		
-		move_uploaded_file($user_tmp,"images/foto/$user_image");
+		move_uploaded_file($user_tmp,"images/$user_image");
 		
 		// QUERY INSERIMENTO UTENTE
 		$insert_user = "INSERT INTO register_user 
@@ -381,10 +368,8 @@ class db
 		$athl_city = $this->pulisci_stringa($_POST['athl_city']);
 		$athl_zip = $this->pulisci_stringa($_POST['athl_zip']);
 		$athl_pr = $this->pulisci_stringa($_POST['athl_pr']);
-		$athl_class = $this->pulisci_stringa($_POST['athl_class']);
 		$athl_ryu_belt = $this->pulisci_stringa($_POST['athl_ryu_belt']);
 		$athl_ryu_data = $this->pulisci_stringa($_POST['athl_ryu_data']);
-		$athl_ryn_nbelt = $this->assegna_cintura($athl_ryu_belt);
 	
 		if(!filter_var($athl_email,FILTER_VALIDATE_EMAIL))
 		{
@@ -402,9 +387,7 @@ class db
 						athl_city='$athl_city',
 						athl_zip='$athl_zip',
 						athl_pr='$athl_pr',
-						athl_class='$athl_class',						
 						athl_ryu_belt='$athl_ryu_belt',
-						athl_ryu_nbelt='$athl_ryu_nbelt',
 						athl_ryu_data=STR_TO_DATE('$athl_ryu_data',$fmt)
 						WHERE athl_id='$edit_id'";
 		
@@ -455,71 +438,15 @@ class db
 	}
 
 
-	public function inserisci_img($athl_image,$athl_tmp,$athl_img_size)
-	{
-		//echo "<script>alert('File Caricato ".$athl_image." - ".$athl_img_size."')</script>";
-		move_uploaded_file($athl_tmp,"images/foto/$athl_image");	
-		
-		// OGGETTO SIMPLE IMAGE - INIZIO		
-		error_reporting(E_ALL & ~E_NOTICE);
-		try {
-		  // Create a new SimpleImage object
-		  $image = new \claviska\SimpleImage();
-			//echo "<script>alert('File In elaborazione ".$athl_image." -')</script>";
-		
-		  // Manipulate it
-		  $image
-		    ->fromFile("images/foto/$athl_image")      // load file
-		    ->autoOrient()                        // adjust orientation based on exif data
-		    ->bestFit(300, 400)                   // proportinoally resize to fit inside a 300x400 box
-		    ->border('white', 5)                  // add a 5 pixel black border
-		    ->toFile("images/foto/$athl_image");
 
-		} 
-		catch(Exception $err) {
-		  // Handle errors
-		  echo $err->getMessage();
-		}
-		// OGGETTO SIMPLE IMAGE - FINE		
-		
-		$ext = substr($athl_image,-3);
-		//echo "<script>alert('Estensione ".$ext."')</script>";
-		
-		$file_name = substr($this->pulisci_stringa($_POST['athl_name']),0,3).substr($this->pulisci_stringa($_POST['athl_surname']),0,3).rand(1,5000).".".$ext;
-		//$file_name = "PIPPO.jpg";
-		//echo "<script>alert('File Caricato ".$file_name."')</script>";
-		
-		rename("images/foto/$athl_image","images/foto/$file_name");
-		//echo "<script>alert('IMMAGINE ELABORATA)</script>";	
-		return $file_name;
-	}
-	
-
-	public function aggiorna_immagine($edit_id,$name,$surname)
+	public function aggiorna_immagine($edit_id)
 	{
-		//ELIMINAZIONE VECCHIO FILE
-		$get_image_name_sql = "SELECT * FROM athletes WHERE athl_id='$edit_id'";
-		$risultato = $this->select_row($get_image_name_sql);
-		$row = $risultato->fetch_array();
-		
-		$get_image_name = $row['athl_image'];
-		//echo "<script>alert('File da cancellare ".$get_image_name."')</script>";
-		
-		unlink('images/foto/'.$get_image_name);
-		
-		//INSERIMENTO NUOVO FILE	
 		$athl_image = $_FILES['athl_image']['name'];
 		$athl_tmp = $_FILES['athl_image']['tmp_name'];
 		
-		$_POST['athl_name'] = $name;
-		$_POST['athl_surname'] = $surname;
-		
-		$athl_image = $this->inserisci_img($athl_image,$athl_tmp,$_FILES['athl_image']['size']);
-		
-		//move_uploaded_file($athl_tmp,"images/foto/$athl_image");
+		move_uploaded_file($athl_tmp,"images/$athl_image");
 		
 		$update_image ="UPDATE athletes SET athl_image='$athl_image' WHERE athl_id='$edit_id'";
-		//echo "<script>alert('File Caricato ".$update_image."')</script>";
 		
 		$run_update_image = $this->db->query($update_image);
 		if($run_update_image)
@@ -542,7 +469,7 @@ class db
 			$this->descrizione_stato = $this->messaggi_errore['problema_con_server'];
 			if($this->stampa_errori)
 			{
-				echo $this->messaggi_errore['problema_con_server'].$this->br.$select;
+				echo $this->messaggi_errore['problame_con_server'].$this->br;
 			}
 			return FALSE;	
 		} 
@@ -553,32 +480,6 @@ class db
 		}
 		
 	}
-
-	public function esporta_csv($fname,$query)
-	{
-	      $output = fopen("php://output", "w");  
-	      fputcsv($output, array('ID','Nome','Cognome','Indirizzo','Citta','Provincia','Telefono','Email','Classe','Cintura','Compleanno'));  
-							
-	      $result = $this->db->query($query);  
-	      while($row = $result->fetch_assoc())  
-	      {  
-	           fputcsv($output, $row);
-	      }  
-	      fclose($output);  
-	}
-	public function esporta_presenze_csv($fname,$query)
-	{
-	      $output = fopen("php://output", "w");  
-	      fputcsv($output, array('ID','Nome','Cognome','Data','Stato'));  
-				
-	      $result = $this->db->query($query);  
-	      while($row = $result->fetch_assoc())  
-	      {  
-	           fputcsv($output, $row);
-	      }  
-	      fclose($output);  
-	}
 	
 }
-
 ?>
