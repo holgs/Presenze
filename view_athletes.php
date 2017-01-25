@@ -13,176 +13,179 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 <html lang="en">
 	<head>
 		<title>Visualizza tutti gli atleti</title>
-    <link rel="stylesheet" href="css/bootstrap.css" />
-    <link rel="stylesheet" href="css/style.css" />
- 		<meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.js"></script>
+	<?php include 'header_head.php';?>
 	</head>
 	<body>
-		<div class="jumbotron col-md-12 col-sm-12">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12 col-sm-12">
-						<h2>Visualizza tutti gli utenti</h2>
-							<table class="table table-hover col-md-12 col-sm-8" align="center">
-								<tr align="left">
-									<th>Num</th>
-									<th>Foto</th>
-									<th>
-										<a href="view_athletes.php?ordina=athl_name&come=
-											<?php 
-												if($_GET['come']=="ASC")
+		<div class="wrapper">
+		<?php include 'sidebar.php';?>  
+			<div class="main-panel">
+				<?php include 'header.php';?>
+				<div class="content">
+					<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-12 col-sm-12">
+									<h2>Visualizza tutti gli utenti</h2>
+										<table class="table table-hover col-md-12 col-sm-8" align="center">
+											<tr align="left">
+												<th>Num</th>
+												<th>Foto</th>
+												<th>
+													<a href="view_athletes.php?ordina=athl_name&come=
+														<?php 
+															if($_GET['come']=="ASC")
+															{
+																$come="DESC";
+															}
+															else 
+															{
+																$come="ASC";	
+															}
+															echo $come;
+														?>
+														">
+														Nome
+													</a>
+												</th>
+												<th>
+													<a href="view_athletes.php?ordina=athl_surname&come=
+														<?php 
+															if($_GET['come']=="ASC")
+															{
+																$come="DESC";
+															}
+															else 
+															{
+																$come="ASC";	
+															}
+															echo $come;
+														?>
+														">
+														Cognome
+													</a>
+												</th>
+												<th>Data di nascita</th>
+												<th>E-mail</th>
+												<th>Telefono</th>
+												<th>
+													<a href="view_athletes.php?ordina=athl_class&come=
+														<?php 
+															if($_GET['come']=="ASC")
+															{
+																$come="DESC";
+															}
+															else 
+															{
+																$come="ASC";	
+															}
+															echo $come;
+														?>
+														">
+														Classe
+													</a>
+												</th>
+												<th>
+													<a href="view_athletes.php?ordina=athl_ryu_nbelt&come=
+														<?php 
+															if($_GET['come']=="ASC")
+															{
+																$come="DESC";
+															}
+															else 
+															{
+																$come="ASC";	
+															}
+															echo $come;
+														?>
+														">
+														Cintura
+													</a>
+												</th>
+												<th></th>
+											</tr>
+											<?php
+											// BLOCCO GESTIONE ORDINAMENTO -- INIZIO
+											$ordina = $_GET['ordina'];
+											$come = $_GET['come'];
+											if($ordina == "" && $come =="")
+											{
+												$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY athl_name ASC";									
+											}
+											else 
+											{
+												switch ($come) 
 												{
-													$come="DESC";
+													case 'DESC':
+														$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina DESC";
+														$come == "ASC";
+														break;
+													case 'ASC':
+														$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina ASC";
+														$come == "DESC";
+														break;
+													default:
+														$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina ASC";
+														break;
 												}
-												else 
+											}
+			//								echo "<script>alert('".$sel."')</script>";
+											// BLOCCO GESTIONE ORDINAMENTO -- FINE
+																			
+												//$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id";
+												$run = $db_pres->select_row($sel);
+												$i = 0;
+												while($row = $run->fetch_array())
 												{
-													$come="ASC";	
-												}
-												echo $come;
+													$id = $row['athl_id'];
+													$name = $row['athl_name'];
+													$surname = $row['athl_surname'];
+													$email = $row['athl_email'];
+													$b_day = date_create($row['athl_b_day']);
+													$image = $row['athl_image'];
+													$phone = $row['athl_no'];
+													$class = $row['athl_class'];
+													$belt = $row['athl_ryu_belt'];
+													$nbelt = $row['athl_ryu_nbelt'];
+													$ryu_id = $row['athl_ryu_athl_id'];
+													$i++;
+									
 											?>
-											">
-											Nome
-										</a>
-									</th>
-									<th>
-										<a href="view_athletes.php?ordina=athl_surname&come=
-											<?php 
-												if($_GET['come']=="ASC")
-												{
-													$come="DESC";
-												}
-												else 
-												{
-													$come="ASC";	
-												}
-												echo $come;
-											?>
-											">
-											Cognome
-										</a>
-									</th>
-									<th>Data di nascita</th>
-									<th>E-mail</th>
-									<th>Telefono</th>
-									<th>
-										<a href="view_athletes.php?ordina=athl_class&come=
-											<?php 
-												if($_GET['come']=="ASC")
-												{
-													$come="DESC";
-												}
-												else 
-												{
-													$come="ASC";	
-												}
-												echo $come;
-											?>
-											">
-											Classe
-										</a>
-									</th>
-									<th>
-										<a href="view_athletes.php?ordina=athl_ryu_nbelt&come=
-											<?php 
-												if($_GET['come']=="ASC")
-												{
-													$come="DESC";
-												}
-												else 
-												{
-													$come="ASC";	
-												}
-												echo $come;
-											?>
-											">
-											Cintura
-										</a>
-									</th>
-									<th></th>
-								</tr>
-								<?php
-								// BLOCCO GESTIONE ORDINAMENTO -- INIZIO
-								$ordina = $_GET['ordina'];
-								$come = $_GET['come'];
-								if($ordina == "" && $come =="")
-								{
-									$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY athl_name ASC";									
-								}
-								else 
-								{
-									switch ($come) 
-									{
-										case 'DESC':
-											$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina DESC";
-											$come == "ASC";
-											break;
-										case 'ASC':
-											$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina ASC";
-											$come == "DESC";
-											break;
-										default:
-											$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina ASC";
-											break;
-									}
-								}
-//								echo "<script>alert('".$sel."')</script>";
-								// BLOCCO GESTIONE ORDINAMENTO -- FINE
-																
-									//$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id";
-									$run = $db_pres->select_row($sel);
-									$i = 0;
-									while($row = $run->fetch_array())
-									{
-										$id = $row['athl_id'];
-										$name = $row['athl_name'];
-										$surname = $row['athl_surname'];
-										$email = $row['athl_email'];
-										$b_day = date_create($row['athl_b_day']);
-										$image = $row['athl_image'];
-										$phone = $row['athl_no'];
-										$class = $row['athl_class'];
-										$belt = $row['athl_ryu_belt'];
-										$nbelt = $row['athl_ryu_nbelt'];
-										$ryu_id = $row['athl_ryu_athl_id'];
-										$i++;
-						
-								?>
-								<tr align="left">
-									<td><?php echo $i;?></td>
-									<td><img src="images/foto/<?php echo $image;?>" class="img-thumbnail center-block" style="max-width:140px;max-height:70px;"/></td>
-									<td><?php echo $name;?></td>
-									<td><?php echo $surname;?></td>
-									<td><?php echo date_format($b_day,'d/m/Y');?></td>
-									<td><?php echo $email;?></td>
-									<td><?php echo $phone;?></td>
-									<td><?php echo $class;?></td>
-									<td><?php echo $belt;?></td>
-									<td>
-										<div class="btn-group btn-group-xs" role="group">
-											<a href="view_athletes.php?id=<?php echo $id;?>&ryu_id=<?php echo $ryu_id?>">
-											<button type="button" class="btn btn-default">Cancella</button>
-											</a>
-											<a href="edit_athlete.php?id=<?php echo $id; ?>">
-											<button type="button" class="btn btn-default">Modifca</button>
-											</a>
-											<a href="detail_athlete.php?id=<?php echo $id; ?>">
-											<button type="button" class="btn btn-default">Dettagli</button>
-											</a>
-										</div>
-									</td>
-								</tr>
-								<?php } ?>
-							</table>
-							<div class="page-header text-center">
-								<p><a href="index_home.php">Indietro</a></p>
+											<tr align="left">
+												<td><?php echo $i;?></td>
+												<td><img src="images/foto/<?php echo $image;?>" class="img-thumbnail center-block" style="max-width:140px;max-height:70px;"/></td>
+												<td><?php echo $name;?></td>
+												<td><?php echo $surname;?></td>
+												<td><?php echo date_format($b_day,'d/m/Y');?></td>
+												<td><?php echo $email;?></td>
+												<td><?php echo $phone;?></td>
+												<td><?php echo $class;?></td>
+												<td><?php echo $belt;?></td>
+												<td>
+													<div class="btn-group btn-group-xs" role="group">
+														<a href="view_athletes.php?id=<?php echo $id;?>&ryu_id=<?php echo $ryu_id?>">
+														<button type="button" class="btn btn-default">Cancella</button>
+														</a>
+														<a href="edit_athlete.php?id=<?php echo $id; ?>">
+														<button type="button" class="btn btn-default">Modifca</button>
+														</a>
+														<a href="detail_athlete.php?id=<?php echo $id; ?>">
+														<button type="button" class="btn btn-default">Dettagli</button>
+														</a>
+													</div>
+												</td>
+											</tr>
+											<?php } ?>
+										</table>
+										<footer class="footer">
+											<div class="container-fluid">
+											<p><a href="index_home.php">Indietro</a></p>
+											</div>
+										</footer>
+
+									</div>
+								</div>
 							</div>
-						<div class="page-header text-right">Benvenuto: <?php echo $_SESSION['user_email']." - ".$_SESSION['username'];?> - 
-							<a href="index_home.php">Home</a> - <a href="logout.php">Logout</a>
 						</div>
 					</div>
-				</div>
 			</div>		
 		</div>
 	  <div class="clearfix"></div>
@@ -206,6 +209,8 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 			$db_pres->close();
 			
 			?>
-	
+
 	</body>
+	<?php include 'footer.php';?>
+	
 </html>

@@ -1,0 +1,25 @@
+
+HEADER:
+<?php include 'header_head.php';?>
+
+
+NAV BAR:
+<?php include 'header.php';?>
+
+
+JAVASCRIPT FINALE:
+<?php include 'footer.php';?>
+
+
+		<div class="wrapper">
+			<div class="main-panel">
+				<?php include 'header.php';?>
+				<div class="content">
+					<div class="container-fluid">
+					......
+					</div>
+				</div>
+			</div>
+		</div>
+					
+					

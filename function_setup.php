@@ -1,7 +1,7 @@
 <?php
 include "setup.php";
 //include($_SERVER['DOCUMENT_ROOT']."/setup.php");
-include '../php/ext/SimpleImage.php';
+//include '../php/ext/SimpleImage.php';
 
 //CLASSE DB
 class db
