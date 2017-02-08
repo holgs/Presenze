@@ -1,6 +1,12 @@
+$name = $_SESSION['username'];
+
 
 HEADER:
 <?php include 'header_head.php';?>
+
+SIDE BAR:
+<?php include 'sidebar.php';?>
+
 
 
 NAV BAR:
@@ -22,4 +28,10 @@ JAVASCRIPT FINALE:
 			</div>
 		</div>
 					
-					
+				
+				<footer class="footer">
+					<div class="container-fluid">
+					<p><a href="index_home.php">Indietro</a></p>
+					</div>
+				</footer>
+	

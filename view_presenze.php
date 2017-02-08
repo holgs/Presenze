@@ -22,18 +22,27 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 				<?php include 'header.php';?>
 				<div class="content">
 					<div class="container-fluid">
+						
+						
 							<div class="row">
-								<div class="col-md-12 col-sm-12">
-									<h2>Visualizza le presenze di tutti gli atleti</h2>
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header" data-background-color="red">
+	                  	<h4 class="title">Visualizza le presenze di tutti gli atleti</h4>
+	                  	<p class="category">Here is a subtitle for this table</p>
+	                  </div>
+	                  <div  class="card-content table-responsive">
 										<table class="table table-hover " align="center"> 
-											<tr align="left">
+											<thead class="text-danger" align="left">
 												<th>Num</th>
 												<th>Nome</th>
 												<th>Cognome</th>
 												<th>Classe</th>
 												<th>Presenze</th>
 												<th>Percentuale</th>
-											</tr>
+												<th>Azioni</th>
+												<th></th>
+											</thead>
 											<?php
 																			
 												$sel = "SELECT 
@@ -80,31 +89,31 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 												<td><?php echo $presenze;?></td>
 												<td>
 													<div class="progress">
-													  <div class="progress-bar" role="progressbar" aria-valuenow="<?php echo $percentuale;?>" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width: <?php echo $percentuale.'%';?>;">
+													  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="<?php echo $percentuale;?>" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;width: <?php echo $percentuale.'%';?>;">
 													    <?php echo $percentuale." %";?>
 													  </div>
 													</div>
 												</td>
+												<td> 
+													<a href="export_presenze.php?id=<?php echo $id; ?>">
+														<button type="button" class="btn btn-xs btn-warning pull-right"><i class="material-icons">get_app</i></button>
+													</a>
+												</td>
 												<td>
-													<div class="btn-group btn-group-xs" role="group">
-														<a href="detail_athlete.php?id=<?php echo $id; ?>">
-														<button type="button" class="btn btn-default">Dettagli</button>
-														</a>
-													</div>
-													<div class="btn-group btn-group-xs" role="group">
-														<a href="export_presenze.php?id=<?php echo $id; ?>">
-														<button type="button" class="btn btn-default">Scarica presenze</button>
-														</a>
-													</div>
+													<a href="detail_athlete.php?id=<?php echo $id; ?>">
+														<button type="button" class="btn btn-success btn-xs pull-left"><i class="material-icons">info</i></button>
+													</a>
 												</td>
 											</tr>
 											<?php } ?>
 										</table>
-				<footer class="footer">
-					<div class="container-fluid">
-					<p><a href="index_home.php">Indietro</a></p>
-					</div>
-				</footer>
+										</div>
+									<footer class="footer">
+										<div class="container-fluid">
+										<p><a href="<?php echo $_SERVER["HTTP_REFERER"];?>">Indietro</a></p>
+										</div>
+									</footer>
+									</div>
 								</div>
 							</div>
 						</div>	

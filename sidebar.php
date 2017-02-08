@@ -8,7 +8,7 @@ echo "
 	    <div class='sidebar' data-color='red' data-image='#'>
 
 			<div class='logo'>
-				<a href='http://www.creative-tim.com' class='simple-text'>
+				<a href='index_home.php' class='simple-text'>
 					Karate Shotokan<br> Viareggio
 				</a>
 			</div>
@@ -16,7 +16,7 @@ echo "
 	    	<div class='sidebar-wrapper'>
 	            <ul class='nav'>
 	                <li class='active'>
-	                    <a href='#'>
+	                    <a href='view_gare.php'>
 	                        <i class='material-icons'>dashboard</i>
 	                        <p>Gare</p>
 	                    </a>

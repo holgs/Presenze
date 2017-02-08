@@ -93,6 +93,27 @@ class db
 	{
 			return $this->db->real_escape_string($stringa);
 	}
+
+	public function delete($sql)
+	{
+		$risultato_query = $this->db->query($sql);
+		
+		if($risultato_query === FALSE)
+		{
+			$this->stato = FALSE;
+			$this->descrizione_stato = $this->messaggi_errore['problema_con_server'];
+			if($this->stampa_errori)
+			{
+				echo $this->messaggi_errore['problame_con_server'].$this->br;
+			}
+			return FALSE;
+		}
+		else 
+		{
+			$this->stato = TRUE;
+		}
+	}
+
 	
 	public function select($sql)
 	{
@@ -191,8 +212,9 @@ class db
 		$presence = "INSERT INTO athl_presence (athl_pres_athl_id,athl_pres_date,athl_pres_presence) VALUES ('$get_id',NOW(),'$get_presence')";
 		$run_presence = $this->insert($presence);
 		
-		$esito = $this->db->query($sql);
-		if($esito)
+		//$esito = $this->db->query($sql);
+		//if($esito)
+		if($run_presence)
 		{
 			$this->stato = TRUE;
 			return $this->db->insert_id;
@@ -260,7 +282,6 @@ class db
 		$athl_class = $this->pulisci_stringa($_POST['athl_class']);
 		$athl_ryu_belt = $this->pulisci_stringa($_POST['athl_ryu_belt']);
 		$athl_ryu_nbelt = $this->assegna_cintura($athl_ryu_belt);
-		echo "<script>alert('CINTURA CONVERTITA in ".$athl_ryu_nbelt."')</script>";
 		
 		$athl_image = $_FILES['athl_image']['name'];
 		$athl_tmp = $_FILES['athl_image']['tmp_name'];
@@ -357,17 +378,23 @@ class db
 	{
 		$presence = "SELECT * FROM athl_presence WHERE athl_pres_athl_id = $edit_id ORDER BY athl_pres_date";
 		$run = $this->select_row($presence);
-		
-		while($row = $run->fetch_array()){
-		$pres_date = $row['athl_pres_date'];
-		if($row['athl_pres_presence']==1)
+		$tpa = array(0,0,0);
+		while($row = $run->fetch_array())
 		{
-			$pres = "Presente";
-		} else {
-			$pres = "Assente";
+			$pres_date = $row['athl_pres_date'];
+			$array_date = explode("-",$pres_date);
+			if($row['athl_pres_presence']==1)
+			{
+				$pres = "Presente";
+				$tpa[1]++;
+			} else {
+				$pres = "Assente";
+				$tpa[2]++;
+			}
+			echo strftime("%a %e",mktime(0,0,0,$array_date[1],$array_date[2],$array_date[0])).": ".$pres."<br>";
+			$tpa[0]++;
 		}
-			echo $pres_date.": ".$pres."<br>";
-		}
+		return $tpa;
 	}
 
 	public function aggiorna_atleta($edit_id)
@@ -395,7 +422,7 @@ class db
 		$update = "UPDATE athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id
 						SET athl_name='$athl_name',
 						athl_surname='$athl_surname',
-						athl_b_day=STR_TO_DATE('$athl_b_day',$fmt),
+						athl_b_day = STR_TO_DATE('$athl_b_day',$fmt),
 						athl_email='$athl_email',
 						athl_no='$athl_no',
 						athl_address='$athl_address',
@@ -407,13 +434,13 @@ class db
 						athl_ryu_nbelt='$athl_ryu_nbelt',
 						athl_ryu_data=STR_TO_DATE('$athl_ryu_data',$fmt)
 						WHERE athl_id='$edit_id'";
-		
+
 		$run_update = $this->db->query($update);
 		//$run_update = $this->insert($update);
 			if($run_update)
 			{
 				echo "<script>alert('Aggiornamento completato con successo')</script>";
-				echo "<script>window.open('view_athletes.php','_self')</script>";
+				echo "<script>window.open('view_athletes.php?ordina=athl_name&come=ASC','_self')</script>";
 	
 			} else {
 				echo "<script>alert('Aggiornamento non effettuato')</script>";
@@ -579,6 +606,106 @@ class db
 	      fclose($output);  
 	}
 	
+
+
+	public function inserisci_gara()
+	{		
+		$gara_nome = $this->pulisci_stringa($_POST['gara_nome']);
+		$gara_federazione = $this->pulisci_stringa($_POST['gara_federazione']);
+		$gara_data = $this->pulisci_stringa($_POST['gara_data']);
+		$gara_luogo = $this->pulisci_stringa($_POST['gara_luogo']);
+		$gara_termine_iscrizione = $this->pulisci_stringa($_POST['gara_termine_iscrizione']);
+		$gara_referente = $this->pulisci_stringa($_POST['gara_referente']);
+		$gara_email = $this->pulisci_stringa($_POST['gara_email']);
+		$gara_telefono = $this->pulisci_stringa($_POST['gara_telefono']);
+		$gara_indirizzo = $this->pulisci_stringa($_POST['gara_indirizzo']);
+		$gara_cap = $this->pulisci_stringa($_POST['gara_cap']);
+		$gara_pr = $this->pulisci_stringa($_POST['gara_pr']);
+		$gara_orario = $this->pulisci_stringa($_POST['gara_orario']);
+		$gara_quota = $this->pulisci_stringa($_POST['gara_quota']);
+		
+		// QUERY INSERIMENTO GARA
+		$insert = "INSERT INTO gara 
+										(
+											gara_nome,
+											gara_federazione,
+											gara_data,
+											gara_luogo,
+											gara_termine_iscrizione,
+											gara_referente,
+											gara_email,
+											gara_telefono,
+											gara_indirizzo,
+											gara_cap,
+											gara_pr,
+											gara_orario,
+											gara_quota
+										) 
+										VALUES 
+										(
+											'$gara_nome',
+											'$gara_federazione',
+											'$gara_data',
+											'$gara_luogo',
+											'$gara_termine_iscrizione',
+											'$gara_referente',
+											'$gara_email',
+											'$gara_telefono',
+											'$gara_indirizzo',
+											'$gara_cap',
+											'$gara_pr',
+											'$gara_orario',
+											'$gara_quota'
+											)";
+										
+		//echo "<script>alert('QUERY: <br>".$insert."')</script>";
+		$run_insert = $this->insert($insert);
+		
+		// OTTENIMENTO gara_id APPENA INSERITO
+		$gara_id = $run_insert;
+				
+		// VERIFICA CORRETTO INSERIMENTO GARA
+		if($run_insert)
+		{
+			echo "<script>alert('Gara inserita con successo!')</script>";
+			echo "<script>window.open('view_gare.php','_self')</script>";
+		}
+		
+		// CREA ELENCO ATLETI CHE POSSONO PARTECIPARE ALLA GARA APPENA CREATA
+		$partecipanti = "INSERT INTO partecipanti (part_athl_id,part_gara_id)
+											Select athl_id,$gara_id
+											from athletes
+											where athl_status = 1";		
+		$run_insert = $this->insert($partecipanti);
+		
+		// CREA ELENCO ATLETI PER I RISULTATI
+/*		$partecipanti_esito = "INSERT INTO risultati (risult_athl_id,risult_gara_id)
+											SELECT part_athl_id,$gara_id
+											FROM partecipanti
+											WHERE part_status = 'ISCRITTO'";		
+		$run_insert = $this->insert($partecipanti_esito);*/
+	}
+
+		public function gara_delete($get_id)
+	{
+		
+		$delete = "DELETE FROM gara WHERE gara_id='$get_id'";
+		$run_delete = $this->db->query($delete);
+		$delete = "DELETE FROM partecipanti WHERE gara_id='$get_id'";
+		$run_delete = $this->db->query($delete);
+		echo "<script>window.open('view_gare.php','_self')</script>";
+								
+		if($run_delete)
+		{
+			$this->stato = TRUE;
+			echo "<script>alert('Gara cancellata con successo')</script>";
+			echo "<script>window.open('".$_SERVER["HTTP_REFERER"]."','_self')</script>";
+			return $this->db->insert_id;
+		}
+	}
+	
+	
+// FINE CLASSE
 }
 
 ?>

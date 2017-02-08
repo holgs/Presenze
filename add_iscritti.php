@@ -6,13 +6,22 @@ if(!isset($_SESSION['user_email']))
     header("location: login.php");
 }
 $db_pres = new db($cartella_ini,$messaggi_errore,true);
+$gara_id = $_GET['gara_id'];
+
+$sel = "SELECT * FROM gara WHERE gara_id='$gara_id'";
+	//DATE_FORMAT(athl_b_day, '%d/%m/%Y')as athl_b_day 
+$run = $db_pres->select_row($sel);
+$row = $run->fetch_array();
+			
+$gara_nome = $row['gara_nome'];
+
 ?>
 <!DOCTYPE html>
 
 
 <html lang="en">
 	<head>
-		<title>Visualizza tutti gli atleti</title>
+		<title>Iscrivi atleti alla gara <?php echo $gara_nome;?></title>
 	<?php include 'header_head.php';?>
 	</head>
 	<body>
@@ -28,8 +37,8 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 								<div class="col-md-12">
 									<div class="card">
 										<div class="card-header" data-background-color="red">
-	                  	<h4 class="title">Visualizza tutti gli utenti</h4>
-	                  	<p class="category">Here is a subtitle for this table</p>
+	                  	<h4 class="title">Iscrivi gli atleti alla gara <?php echo $gara_nome;?></h4>
+	                  	<p class="category">Iscrizione degli atleti</p>
 	                  </div>
 	                  <div class="card-content table-responsive">
 											<table class="table table-hover" align="center">
@@ -37,7 +46,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 													<th>Num</th>
 													<th>Foto</th>
 													<th>
-														<a href="view_athletes.php?ordina=athl_name&come=
+														<a href="add_iscritti.php?ordina=athl_name&come=
 															<?php 
 																if($_GET['come']=="ASC")
 																{
@@ -47,14 +56,14 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 																{
 																	$come="ASC";	
 																}
-																echo $come;
+																echo $come."&gara_id=".$gara_id;
 															?>
 															" class="text-danger">
 															Nome
 														</a>
 													</th>
 													<th>
-														<a href="view_athletes.php?ordina=athl_surname&come=
+														<a href="add_iscritti.php?ordina=athl_surname&come=
 															<?php 
 																if($_GET['come']=="ASC")
 																{
@@ -64,7 +73,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 																{
 																	$come="ASC";	
 																}
-																echo $come;
+																echo $come."&gara_id=".$gara_id;
 															?>
 															" class="text-danger">
 															Cognome
@@ -74,7 +83,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 													<th>E-mail</th>
 													<th>Telefono</th>
 													<th>
-														<a href="view_athletes.php?ordina=athl_class&come=
+														<a href="add_iscritti.php?ordina=athl_class&come=
 															<?php 
 																if($_GET['come']=="ASC")
 																{
@@ -84,14 +93,14 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 																{
 																	$come="ASC";	
 																}
-																echo $come;
+																echo $come."&gara_id=".$gara_id;
 															?>
 															" class="text-danger">
 															Classe
 														</a>
 													</th>
 													<th>
-														<a href="view_athletes.php?ordina=athl_ryu_nbelt&come=
+														<a href="add_iscritti.php?ordina=athl_ryu_nbelt&come=
 															<?php 
 																if($_GET['come']=="ASC")
 																{
@@ -101,15 +110,14 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 																{
 																	$come="ASC";	
 																}
-																echo $come;
+																echo $come."&gara_id=".$gara_id;
 															?>
 															" class="text-danger">
 															Cintura
 														</a>
 													</th>
 													<th>Azioni</th>
-													<th></th>
-													<th></th>
+
 												</thead>
 												<?php
 												// BLOCCO GESTIONE ORDINAMENTO -- INIZIO
@@ -117,22 +125,46 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 												$come = $_GET['come'];
 												if($ordina == "" && $come =="")
 												{
-													$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY athl_name ASC";									
+													$sel = "SELECT * 
+																	FROM athletes 
+																	LEFT JOIN athletes_ryu 
+																		ON athl_id = athl_ryu_athl_id
+																	LEFT JOIN partecipanti 
+																		ON athl_id = part_athl_id 
+																	LEFT JOIN gara 
+																		ON gara_id = part_gara_id
+																	WHERE part_gara_id = $gara_id
+																	ORDER BY athl_name ASC";									
 												}
 												else 
 												{
 													switch ($come) 
 													{
 														case 'DESC':
-															$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina DESC";
+															$sel = "SELECT * FROM athletes 
+																			LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id 
+																			LEFT JOIN partecipanti ON athl_id = part_athl_id 
+																			LEFT JOIN gara ON gara_id = part_gara_id 
+																			WHERE part_gara_id = $gara_id
+																			ORDER BY $ordina DESC";
 															$come == "ASC";
 															break;
 														case 'ASC':
-															$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina ASC";
+															$sel = "SELECT * FROM athletes 
+																			LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id 
+																			LEFT JOIN partecipanti ON athl_id = part_athl_id 
+																			LEFT JOIN gara ON gara_id = part_gara_id 
+																			WHERE part_gara_id = $gara_id
+																			ORDER BY $ordina ASC";
 															$come == "DESC";
 															break;
 														default:
-															$sel = "SELECT * FROM athletes LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id ORDER BY $ordina ASC";
+															$sel = "SELECT * FROM athletes 
+																			LEFT JOIN athletes_ryu ON athl_id = athl_ryu_athl_id 
+																			LEFT JOIN partecipanti ON athl_id = part_athl_id 
+																			LEFT JOIN gara ON gara_id = part_gara_id
+																			WHERE part_gara_id = $gara_id
+																			ORDER BY $ordina ASC";
 															break;
 													}
 												}
@@ -152,7 +184,12 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 														$class = $row['athl_class'];
 														$belt = $row['athl_ryu_belt'];
 														$nbelt = $row['athl_ryu_nbelt'];
-														$ryu_id = $row['athl_ryu_athl_id'];
+														$gara_nome = $row['gara_nome'];
+														$iscritto = $row['part_status'];
+														$atleta_iscritto = $row['part_athl_id'];
+														$iscritto_gara = $row['part_gara_id'];
+														//echo "<script>alert('ciclo WHILE Atleta ".$atleta_iscritto." iscritto a gara ".$iscritto_gara." stato atleta ".$iscritto."');</script>";
+																												
 														$i++;
 										
 												?>
@@ -167,19 +204,31 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 													<td><?php echo $class;?></td>
 													<td><?php echo $belt;?></td>
 													<td>
-															<a href="view_athletes.php?id=<?php echo $id;?>&ryu_id=<?php echo $ryu_id?>">
-															<button type="button" class="btn btn-danger btn-xs pull-left"><i class="material-icons">delete</i></button>
-															</a>
-														</td>
-														<td>
-															<a href="edit_athlete.php?id=<?php echo $id; ?>">
-															<button type="button" class="btn btn-warning btn-xs pull-left"><i class="material-icons">create</i></button>
-															</a>
-														</td>
-														<td>
-															<a href="detail_athlete.php?id=<?php echo $id; ?>">
-															<button type="button" class="btn btn-success btn-xs pull-left"><i class="material-icons">info</i></button>
-															</a>
+													<?php																										
+													if($iscritto == 'ISCRITTO' && $iscritto_gara == $gara_id)
+//																		<script>alert('IF ISCRITTO e GARA gia iscritto : ".$iscritto_gara."');</script>
+													{
+														echo "
+														
+															<a href='add_iscritti_process.php?gara_id=$gara_id&part_id=$id&rimuovi=ok'>
+															<button type='button' class='btn btn-danger btn-xs pull-left'><i class='material-icons'>delete</i></button>
+															</a>														
+														";
+													} 
+													else 
+													{
+//																		<script>alert('Atleta da iscrivere: ".$gara_id." ".$id."');</script>
+														echo "
+														
+															<a href='add_iscritti_process.php?gara_id=$gara_id&part_id=$id&aggiungi=ok'>
+															<button type='button' class='btn btn-success btn-xs pull-left'><i class='material-icons'>trending_flat</i></button>
+															</a>														
+														";
+														//echo "<script>alert('NON ISCRITTO ".$id."')</script>";
+													}
+													
+													?>						
+
 													</td>
 												</tr>
 												<?php } ?>
@@ -187,7 +236,7 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 										</div>
 											<footer class="footer">
 												<div class="container-fluid">
-												<p><a href="<?php echo $_SERVER["HTTP_REFERER"];?>">Indietro</a></p>
+												<p><a href="<?php echo "detail_gara.php?id=".$gara_id;?>">Indietro</a></p>
 												</div>
 											</footer>
 										</div>
@@ -200,25 +249,20 @@ $db_pres = new db($cartella_ini,$messaggi_errore,true);
 		</div>
 	  <div class="clearfix"></div>
 	
-			
+			<!--
 			<?php
-			//DELETE USER
-			if(isset($_GET['id']) && isset($_GET['ryu_id']))
+			//ADD ATLETA A GARA
+			if(isset($_GET['part_id']) && isset($_GET['gara_id']) && isset($_GET['aggiungi']))
 			{
-				$db_pres->athlete_delete($_GET['id'],$_GET['ryu_id']);
+				$part_id = $_GET['part_id'];
+				echo $part_id."<br>".$gara_id;
+				$add = "INSERT INTO partecipanti (part_gara_id,part_athl_id,part_status) VALUES ('".$gara_id."','".$part_id."','ISCRITTO')";
+				//$add = "INSERT INTO partecipanti (part_status) VALUES ('Iscritto')";
+				$db_pres->insert($add);
+				echo "<script>window.open('add_iscritti.php?".$gara_id."','_self'</script>";
 			}		
-			?>
-			
-			<?php
-			//INSERISCI PRESENZA
-			if(isset($_GET['id']) && isset($_GET['presence']))
-			{
-				$get_id = $_GET['id'];
-				$run_presence = $db_pres->athlete_presence($_GET['id']);
-			}
-			$db_pres->close();
-			
-			?>
+			?> -->
+
 
 	</body>
 	<?php include 'footer.php';?>
